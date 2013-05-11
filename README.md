@@ -15,6 +15,34 @@ You probably actually want to be using [jgit][1].
 
 [1]: http://www.jgit.org
 
+## How do I work with this?
+
+Apologies to Maven lovers, this setup is abysmal at the moment.
+
+1. Build libgit2 for your platform:
+
+        cd src/main/native/libgit2
+    	mkdir build
+    	cd build
+    	cmake .. -DSONAME=OFF
+    	cmake --build . --config RelWithDebInfo
+    	make
+
+2. Copy the resultant binaries to `native/[osname]/[arch]` where `[osname]`
+   and `[arch]` represent the OSGI operating system and processor identifiers.
+   eg, `native/linux/x86`.  (The exception being on Mac OS, where we build
+   fat binaries.)
+
+3. Build JNI libraries for your platform:
+
+        cd src/main/native/libjagged
+    	make
+
+4. Copy the resultant binaries to `native/[osname]/[arch]`, the same place
+   as in step 2.
+
+5. Now you can build the Java (eg `mvn install`).
+
 ## License
 
 Available under the MIT license (refer to the [LICENSE][2] file).

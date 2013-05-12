@@ -5,56 +5,45 @@
 #include <git2.h>
 
 #include "util.h"
+#include "reference.h"
+#include "oid.h"
 
-JNIEXPORT jint JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_referenceType(
-	JNIEnv *env,
-	jclass class,
-	void *ref_ptr)
-{
-	const git_reference *ref = ref_ptr;
-
-	assert(env);
-	assert(class);
-	assert(ref);
-
-	return git_reference_type(ref);
-}
-
-JNIEXPORT jint JNICALL
+JNIEXPORT jobject JNICALL
 Java_org_libgit2_jagged_core_NativeMethods_referenceResolve(
 	JNIEnv *env,
 	jclass class,
-	jobject out_handle,
-	void *ref_ptr)
+	jobject repo_java,
+	jstring refname_java)
 {
-	const git_reference *ref = ref_ptr;
-	git_reference *out;
+	char *refname = NULL;
+	git_reference *symbolic = NULL, *resolved = NULL;
+	git_repository *repo;
 	int error = 0;
+	jobject ref_java = NULL;
 
 	assert(env);
 	assert(class);
-	assert(out_handle);
-	assert(ref);
+	assert(refname_java);
 
-	if ((error = git_reference_resolve(&out, ref)) >= 0)
-		error = git_java_handle_set(env, out_handle, out);
+	if ((refname = git_java_jstring_to_utf8(env, refname_java)) == NULL)
+		return NULL;
 
-	return error;
-}
+	if ((repo = git_java_handle_get(env, repo_java)) == NULL)
+		goto done;
 
-JNIEXPORT void JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_referenceFree(
-	JNIEnv *env,
-	jclass class,
-	void *ref_ptr)
-{
-	git_reference *ref = ref_ptr;
+	if ((error = git_reference_lookup(&symbolic, repo, refname)) < 0 ||
+		(error = git_reference_resolve(&resolved, symbolic)) < 0) {
+		git_java_exception_throw_from_giterr(env, error);
+		goto done;
+	}
 
-	assert(env);
-	assert(class);
-	assert(ref);
+	ref_java = git_java_reference_init(env, resolved);
 
-	git_reference_free(ref);
+done:
+	git_reference_free(resolved);
+	git_reference_free(symbolic);
+	git_java_utf8_free(env, refname_java, refname);
+
+	return ref_java;
 }
 

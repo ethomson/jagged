@@ -1,47 +1,12 @@
 package org.libgit2.jagged;
 
-import org.libgit2.jagged.core.GitException;
-import org.libgit2.jagged.core.NativeHandle;
 import org.libgit2.jagged.core.NativeMethods;
-import org.libgit2.jagged.core.ReferenceType;
 
 /**
  * A Reference to another git object.
  */
-public abstract class Reference
+public interface Reference
 {
-    private final NativeHandle handle;
-
-    protected static Reference newFromHandle(NativeHandle handle)
-    {
-        ReferenceType type = NativeMethods.referenceType(handle);
-
-        if (type == ReferenceType.OID)
-        {
-            return new DirectReference(handle);
-        }
-        else if (type == ReferenceType.SYMBOLIC)
-        {
-            return new SymbolicReference(handle);
-        }
-        else
-        {
-            throw new GitException("Unknown reference type");
-        }
-    }
-
-    protected Reference(NativeHandle handle)
-    {
-        assert (handle != null);
-
-        this.handle = handle;
-    }
-
-    protected NativeHandle getHandle()
-    {
-        return handle;
-    }
-
     /**
      * Resolves ("peels") a reference by following the targets of symbolic
      * references until a {@link DirectReference} is found, returning that. The
@@ -50,50 +15,53 @@ public abstract class Reference
      * @return the resolved {@link DirectReference}
      */
     public abstract DirectReference resolve();
-
-    /**
-     * Disposes the underlying Reference object.
-     */
-    public final void dispose()
-    {
-        NativeMethods.referenceFree(handle);
-    }
-
+    
     /**
      * A DirectReference is a {@link Reference} that points immediately to an
      * OID.
      */
     public static class DirectReference
-        extends Reference
-    {
-        DirectReference(NativeHandle handle)
-        {
-            super(handle);
-        }
-
-        @Override
-        public final DirectReference resolve()
-        {
-            return this;
-        }
-    }
-
+	    implements Reference
+	{
+		private final Oid oid;
+		
+	    private DirectReference(Oid oid)
+	    {
+	    	this.oid = oid;
+	    }
+	    
+	    public Oid getTarget()
+	    {
+	    	return oid;
+	    }
+	
+	    public final DirectReference resolve()
+	    {
+	        return this;
+	    }
+	}
+    
     /**
      * A SymbolicReference is a {@link Reference} to another reference.
      */
-    public static class SymbolicReference
-        extends Reference
+    public class SymbolicReference
+        implements Reference
     {
-        SymbolicReference(NativeHandle handle)
+    	private final String target;
+    	
+    	private SymbolicReference(final String target)
         {
-            super(handle);
+    		this.target = target;
         }
+    	
+    	public String getTarget()
+    	{
+    		return target;
+    	}
 
-        @Override
         public final DirectReference resolve()
         {
-            Reference resolved = Reference.newFromHandle(NativeMethods.referenceResolve(getHandle()));
-            return (DirectReference) resolved;
+        	return NativeMethods.referenceResolve(target);
         }
     }
 }

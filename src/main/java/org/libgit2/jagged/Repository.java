@@ -9,7 +9,9 @@ import org.libgit2.jagged.core.NativeMethods;
  */
 public class Repository
 {
-    private final NativeHandle handle;
+	private boolean bare;
+	
+    private final NativeHandle handle = new NativeHandle();
 
     /**
      * Open an existing on-disk git repository. The returned Repository must be
@@ -21,8 +23,10 @@ public class Repository
     public Repository(final String path)
     {
         Ensure.argumentNotNullOrEmpty(path, "path");
+        
+        NativeMethods.repositoryOpen(this, path);
 
-        handle = NativeMethods.repositoryOpen(path);
+        Ensure.nativeNotNull(handle);
     }
 
     /**
@@ -45,8 +49,8 @@ public class Repository
     public static Repository init(final String path, boolean bare)
     {
         Ensure.argumentNotNullOrEmpty(path, "path");
-
-        return new Repository(NativeMethods.repositoryInit(path, bare));
+        
+        return NativeMethods.repositoryInit(path, bare);
     }
 
     /**
@@ -63,14 +67,28 @@ public class Repository
     {
         Ensure.argumentNotNull(sourceUrl, "sourceUrl");
         Ensure.argumentNotNull(path, "path");
-
-        return new Repository(NativeMethods.repositoryClone(sourceUrl, path));
+        
+        return NativeMethods.repositoryClone(sourceUrl, path);
     }
 
-    private Repository(NativeHandle handle)
+	@SuppressWarnings("unused")
+	private Repository(final long handle, final boolean bare)
     {
-        this.handle = handle;
+		this.handle.set(handle);
+		this.bare = bare;
     }
+
+	@SuppressWarnings("unused")
+	private void setHandle(long handle)
+	{
+		this.handle.set(handle);
+	}
+	
+	@SuppressWarnings("unused")
+	private long getHandle()
+	{
+		return handle.get();
+	}
 
     /**
      * Queries whether this repository is a "bare" repository, once that lacks a
@@ -81,7 +99,7 @@ public class Repository
      */
     public boolean isBare()
     {
-        return NativeMethods.repositoryIsBare(handle);
+    	return bare;
     }
 
     /**
@@ -91,8 +109,7 @@ public class Repository
      */
     public Reference getHead()
     {
-        final NativeHandle referenceHandle = NativeMethods.repositoryHead(handle);
-        return Reference.newFromHandle(referenceHandle);
+    	return NativeMethods.repositoryHead(this);
     }
 
     /**
@@ -100,6 +117,6 @@ public class Repository
      */
     public void dispose()
     {
-        NativeMethods.repositoryFree(handle);
+        NativeMethods.repositoryFree(this);
     }
 }

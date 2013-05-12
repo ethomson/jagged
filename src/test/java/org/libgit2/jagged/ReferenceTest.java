@@ -14,7 +14,5 @@ public class ReferenceTest
         Reference headReference = repository.getHead();
 
         Assert.assertTrue(headReference instanceof DirectReference);
-
-        headReference.dispose();
     }
 }

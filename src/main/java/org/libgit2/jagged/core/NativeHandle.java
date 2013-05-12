@@ -15,8 +15,7 @@ public final class NativeHandle
      * @param handle
      *        the new handle (not {@code 0})
      */
-    @SuppressWarnings("unused")
-    private void set(long handle)
+    public void set(long handle)
     {
         if (handle == 0)
         {
@@ -34,7 +33,7 @@ public final class NativeHandle
      * 
      * @return the handle (never {@code 0})
      */
-    long get()
+    public long get()
     {
         long handle = ptr.get();
 
@@ -51,7 +50,7 @@ public final class NativeHandle
      * 
      * @return the handle (never {@code 0})
      */
-    long dispose()
+    public long dispose()
     {
         long handle = ptr.getAndSet(0);
 

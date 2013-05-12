@@ -51,6 +51,22 @@ public final class Ensure
             throw new IllegalArgumentException(MessageFormat.format("{0} may not be empty", name));
         }
     }
+        
+    public static final void nativeNotNull(Object obj)
+    {
+    	if (obj == null)
+    	{
+    		throw new GitException("An unknown error occurred");
+    	}    	
+    }
+    
+    public static final void nativeNotNull(NativeHandle handle)
+    {
+    	if (handle.get() == 0)
+    	{
+    		throw new GitException("An unknown error occurred");
+    	}
+    }
 
     /**
      * Ensures that the {@code int} result from a native libgit2 call is a zero
@@ -66,7 +82,7 @@ public final class Ensure
             return;
         }
 
-        nativeHandleError(result);
+        nativeError(result);
     }
 
     /**
@@ -83,7 +99,7 @@ public final class Ensure
             return;
         }
 
-        nativeHandleError(result);
+        nativeError(result);
     }
 
     /**
@@ -100,10 +116,10 @@ public final class Ensure
             return;
         }
 
-        nativeHandleError(result);
+        nativeError(result);
     }
 
-    private static final void nativeHandleError(int result)
+    private static final void nativeError(int result)
     {
         GitError error = NativeMethods.errorLast();
 

@@ -11,6 +11,8 @@
 
 #define GIT_UNUSED(x) ((void)(x))
 
+#include "exception.h"
+
 #define GITERR_CHECK_ALLOC(ptr) \
 	if (ptr == NULL) { \
 		giterr_set_oom(); \
@@ -96,35 +98,76 @@ GIT_INLINE(void) git_java_native_free(
 #endif
 }
 
-GIT_INLINE(int) git_java_handle_set(
-	JNIEnv *env, jobject handle, void *ptr)
+GIT_INLINE(void *)
+git_java_ptr_from_jlong(jlong handle)
 {
-	jlong value;
-	jclass handle_class;
-	jmethodID handle_setmethod;
+	void *ptr;
 
-	memset(&value, 0, sizeof(jlong));
-	memcpy(&value, &ptr, sizeof(void *));
+	memcpy(&ptr, &handle, sizeof(void *));
 
-	/* TODO: can we cache this in the env somewhere? */
+	return ptr;
+}
 
-	handle_class = (*env)->GetObjectClass(env, handle);
+GIT_INLINE(jlong)
+git_java_jlong_from_ptr(void *ptr)
+{
+	jlong handle;
 
-	if (handle_class == NULL) {
-		giterr_set_str(GITERR_JAVA, "Native.Handle class not found");
-		return -1;
+	memset(&handle, 0, sizeof(jlong));
+	memcpy(&handle, &ptr, sizeof(void *));
+
+	return handle;
+}
+
+GIT_INLINE(void *)
+git_java_handle_get(JNIEnv *env, jobject obj)
+{
+	jlong handle;
+	jclass obj_class;
+	jmethodID obj_gethandlemethod;
+
+	obj_class = (*env)->GetObjectClass(env, obj);
+
+	if (obj_class == NULL) {
+		git_java_exception_throw(env, "object class not found");
+		return 0;
 	}
 
-	handle_setmethod = (*env)->GetMethodID(env, handle_class, "set", "(J)V");
+	obj_gethandlemethod = (*env)->GetMethodID(env, obj_class, "getHandle", "()J");
 
-	if (handle_setmethod == NULL) {
-		giterr_set_str(GITERR_JAVA, "Native.Handle.set method not found");
-		return -1;
+	if (obj_gethandlemethod == NULL) {
+		git_java_exception_throw(env, "object class setHandle method not found");
+		return 0;
 	}
 
-	(*env)->CallVoidMethod(env, handle, handle_setmethod, value);
+	handle = (*env)->CallLongMethod(env, obj, obj_gethandlemethod);
 
-	return 0;
+	return git_java_ptr_from_jlong(handle);
+}
+
+GIT_INLINE(void)
+git_java_handle_set(JNIEnv *env, jobject obj, void *ptr)
+{
+	jlong handle;
+	jclass obj_class;
+	jmethodID obj_sethandlemethod;
+
+	handle = git_java_jlong_from_ptr(ptr);
+	obj_class = (*env)->GetObjectClass(env, obj);
+
+	if (obj_class == NULL) {
+		git_java_exception_throw(env, "object class not found");
+		return;
+	}
+
+	obj_sethandlemethod = (*env)->GetMethodID(env, obj_class, "setHandle", "(J)V");
+
+	if (obj_sethandlemethod == NULL) {
+		git_java_exception_throw(env, "object class setHandle method not found");
+		return;
+	}
+
+	(*env)->CallVoidMethod(env, obj, obj_sethandlemethod, handle);
 }
 
 #endif /* GIT_JAVA_UTIL_H */

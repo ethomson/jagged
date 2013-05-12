@@ -4,148 +4,140 @@
 #include <jni.h>
 #include <git2.h>
 
+#include "repository.h"
+#include "reference.h"
 #include "util.h"
 
-JNIEXPORT jint JNICALL
+JNIEXPORT void JNICALL
 Java_org_libgit2_jagged_core_NativeMethods_repositoryOpen(
 	JNIEnv *env,
 	jclass class,
-	jobject out_handle,
+	jobject repo_java,
 	jstring path_java)
 {
-	const char *path_utf8 = NULL;
+	const char *path = NULL;
 	git_repository *repo;
 	int error = 0;
 
 	assert(env);
 	assert(class);
-	assert(out_handle);
+	assert(repo_java);
 	assert(path_java);
 
-	path_utf8 = git_java_jstring_to_utf8(env, path_java);
-	GITERR_CHECK_ALLOC(path_utf8);
+	if ((path = git_java_jstring_to_utf8(env, path_java)) == NULL)
+		return;
 
-	if ((error = git_repository_open(&repo, path_utf8)) >= 0)
-		error = git_java_handle_set(env, out_handle, repo);
+	if ((error = git_repository_open(&repo, path)) < 0)
+		git_java_exception_throw_from_giterr(env, error);
+	else
+		git_java_handle_set(env, repo_java, repo);
 
-	git_java_utf8_free(env, path_java, path_utf8);
-
-	return error;
+	git_java_utf8_free(env, path_java, path);
 }
 
-JNIEXPORT jint JNICALL
+JNIEXPORT jobject JNICALL
 Java_org_libgit2_jagged_core_NativeMethods_repositoryInit(
 	JNIEnv *env,
 	jclass class,
-	jobject out_handle,
 	jstring path_java,
 	jboolean bare)
 {
-	const char *path_utf8 = NULL;
-	git_repository *repo;
+	const char *path = NULL;
+	git_repository *repo = NULL;
+	jobject repo_java = NULL;
 	int error = 0;
 
 	assert(env);
 	assert(class);
-	assert(out_handle);
 	assert(path_java);
 
-	path_utf8 = git_java_jstring_to_utf8(env, path_java);
-	GITERR_CHECK_ALLOC(path_utf8);
+	if ((path = git_java_jstring_to_utf8(env, path_java)) == NULL)
+		return NULL;
 
-	if ((error = git_repository_init(&repo, path_utf8, bare ? 1 : 0)) >= 0)
-		error = git_java_handle_set(env, out_handle, repo);
+	if ((error = git_repository_init(&repo, path, bare ? 1 : 0)) < 0)
+		git_java_exception_throw_from_giterr(env, error);
+	else
+		repo_java = git_java_repository_init(env, repo);
 
-	git_java_utf8_free(env, path_java, path_utf8);
+	git_java_utf8_free(env, path_java, path);
 
-	return error;
+	return repo_java;
 }
 
-JNIEXPORT jint JNICALL
+JNIEXPORT jobject JNICALL
 Java_org_libgit2_jagged_core_NativeMethods_repositoryClone(
 	JNIEnv *env,
 	jclass class,
-	jobject out_handle,
 	jstring sourceurl_java,
 	jstring path_java)
 {
-	const char *sourceurl_utf8 = NULL, *path_utf8 = NULL;
+	const char *sourceurl = NULL, *path = NULL;
 	git_repository *repo;
+	jobject repo_java = NULL;
 	int error = 0;
 
 	assert(env);
 	assert(class);
-	assert(out_handle);
 	assert(sourceurl_java);
 	assert(path_java);
 
-	sourceurl_utf8 = git_java_jstring_to_utf8(env, sourceurl_java);
-	GITERR_CHECK_ALLOC(sourceurl_utf8);
+	if ((path = git_java_jstring_to_utf8(env, path_java)) == NULL ||
+		(sourceurl = git_java_jstring_to_utf8(env, sourceurl_java)) == NULL)
+		return NULL;
 
-	path_utf8 = git_java_jstring_to_utf8(env, path_java);
-	GITERR_CHECK_ALLOC(path_utf8);
+	if ((error = git_clone(&repo, sourceurl, path, NULL)) < 0)
+		git_java_exception_throw_from_giterr(env, error);
+	else
+		repo_java = git_java_repository_init(env, repo);
 
-	if ((error = git_clone(&repo, sourceurl_utf8, path_utf8, NULL)) >= 0)
-		error = git_java_handle_set(env, out_handle, repo);
+	git_java_utf8_free(env, sourceurl_java, sourceurl);
+	git_java_utf8_free(env, path_java, path);
 
-	git_java_utf8_free(env, sourceurl_java, sourceurl_utf8);
-	git_java_utf8_free(env, path_java, path_utf8);
-
-	return error;
+	return repo_java;
 }
 
-JNIEXPORT jint JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_repositoryIsBare(
-	JNIEnv *env,
-	jclass class,
-	void *repo_ptr)
-{
-	git_repository *repo = repo_ptr;
-
-	assert(env);
-	assert(class);
-	assert(repo);
-
-	return git_repository_is_bare(repo);
-}
-
-JNIEXPORT jint JNICALL
+JNIEXPORT jobject JNICALL
 Java_org_libgit2_jagged_core_NativeMethods_repositoryHead(
 	JNIEnv *env,
 	jclass class,
-	jobject out_handle,
-	void *repo_ptr)
+	jobject repo_java)
 {
-	git_repository *repo = repo_ptr;
-	git_reference *ref;
+	git_repository *repo;
+	git_reference *ref = NULL;
+	jobject ref_java;
 	int error;
 
 	assert(env);
 	assert(class);
 	assert(repo);
 
-	if ((error = git_repository_head(&ref, repo)) < 0)
-		return error;
+	repo = git_java_handle_get(env, repo_java);
 
-	if ((error = git_java_handle_set(env, out_handle, ref)) < 0) {
-		git_reference_free(ref);
-		return error;
+	if ((error = git_repository_head(&ref, repo)) < 0) {
+		git_java_exception_throw_from_giterr(env, error);
+		return NULL;
 	}
 
-	return 0;
+	ref_java = git_java_reference_init(env, ref);
+
+	git_reference_free(ref);
+
+	return ref_java;
 }
 
 JNIEXPORT void JNICALL
 Java_org_libgit2_jagged_core_NativeMethods_repositoryFree(
 	JNIEnv *env,
 	jclass class,
-	void *repo_ptr)
+	jobject repo_java)
 {
-	git_repository *repo = repo_ptr;
+	git_repository *repo;
 
 	assert(env);
 	assert(class);
-	assert(repo);
+	assert(repo_java);
+
+	repo = git_java_handle_get(env, repo_java);
 
 	git_repository_free(repo);
 }

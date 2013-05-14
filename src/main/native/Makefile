@@ -25,7 +25,7 @@ install: install_libgit2 install_libjagged
 
 clean: clean_libgit2 clean_libjagged
 
-build_libgit2:
+build_libgit2: $(LIBGIT2_SRC)/src
 	@mkdir -p $(LIBGIT2_TARGET)
 	(cd $(LIBGIT2_TARGET) && \
 	 cmake $(LIBGIT2_SRC) -DSONAME=OFF -DTHREADSAFE=ON -DBUILD_CLAR=OFF \

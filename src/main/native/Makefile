@@ -13,6 +13,7 @@ LIBJAGGED_TARGET=$(NATIVE_TARGET)/libjagged
 
 LIBGIT2_SRC=${CURDIR}/libgit2
 LIBJAGGED_SRC=${CURDIR}/libjagged
+ROOT_SRC+=${CURDIR}/../../..
 
 CMAKE_CONFIG=RelWithDebInfo
 
@@ -24,12 +25,15 @@ install: install_libgit2 install_libjagged
 
 clean: clean_libgit2 clean_libjagged
 
-build_libgit2:
+build_libgit2: $(LIBGIT2_SRC)/src
 	@mkdir -p $(LIBGIT2_TARGET)
 	(cd $(LIBGIT2_TARGET) && \
 	 cmake $(LIBGIT2_SRC) -DSONAME=OFF -DTHREADSAFE=ON -DBUILD_CLAR=OFF \
 	 -DCMAKE_C_FLAGS="$(CMAKE_C_FLAGS) $(ARCH_CFLAGS)")
 	cmake --build $(LIBGIT2_TARGET) --config $(CMAKE_CONFIG)
+
+$(LIBGIT2_SRC)/src:
+	(cd $(ROOT_SRC) && git submodule init && git submodule update)
 
 $(LIBGIT2_TARGET)/libgit2.$(SO_EXTENSION): build_libgit2
 

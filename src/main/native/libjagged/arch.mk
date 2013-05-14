@@ -3,7 +3,7 @@
 #
 
 # Update OS names to canonical format
-OS=$(shell uname -s)
+OS=$(shell sh -c 'uname -s 2>/dev/null || echo not')
 
 ifeq ($(OS),Darwin)
 	OS=macosx

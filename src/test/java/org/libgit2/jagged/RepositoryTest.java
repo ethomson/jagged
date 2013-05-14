@@ -5,6 +5,8 @@ import java.io.File;
 import org.junit.Assert;
 import org.junit.Test;
 import org.libgit2.jagged.core.GitException;
+import org.libgit2.jagged.core.Platform;
+import org.libgit2.jagged.core.Platform.OperatingSystem;
 
 public class RepositoryTest
     extends GitTest
@@ -37,7 +39,14 @@ public class RepositoryTest
         }
         catch (GitException e)
         {
-            caught = e.getMessage().endsWith("No such file or directory");
+        	if (Platform.getCurrentPlatform().getOperatingSystem().equals(OperatingSystem.WINDOWS))
+        	{
+        		caught = e.getMessage().trim().endsWith("The system cannot find the file specified.");
+        	}
+        	else
+        	{
+                caught = e.getMessage().endsWith("No such file or directory");        		
+        	}
 
             if (!caught)
                 throw e;

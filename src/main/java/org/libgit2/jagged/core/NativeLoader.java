@@ -48,16 +48,17 @@ public class NativeLoader
         {
             mappedLibraryName = System.mapLibraryName(libraryName);
         }
-
-        File libraryPath = new File(architecturePath, mappedLibraryName);
-
+        
         /*
-         * Fall back to the operating system path (without architecture) as some
-         * platforms can support fat binaries,
+         * Try the operating system path first - some platforms (eg, Mac OS) can 
+         * support "fat" binaries that are archives of the libraries for the multiple
+         * architectures.
          */
+        File libraryPath = new File(operatingSystemPath, mappedLibraryName);
+        
         if (!libraryPath.exists())
         {
-            libraryPath = new File(operatingSystemPath, mappedLibraryName);
+            libraryPath = new File(architecturePath, mappedLibraryName);        	
         }
         
         System.load(libraryPath.getAbsolutePath());

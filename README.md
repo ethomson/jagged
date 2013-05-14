@@ -19,29 +19,32 @@ You probably actually want to be using [jgit][1].
 
 Apologies to Maven lovers, this setup is abysmal at the moment.
 
-1. Build libgit2 for your platform:
+1. Get the included libgit2 submodule:
+        git submodule init
+        git submodule update
 
-        cd src/main/native/libgit2
-    	mkdir build
-    	cd build
-    	cmake .. -DSONAME=OFF
-    	cmake --build . --config RelWithDebInfo
-    	make
+2. Build the natives (libgit2 and libjagged) for your platform, and copy
+   them into the `native` directory:
+        cd src/main/native
+        make install
 
-2. Copy the resultant binaries to `native/[osname]/[arch]` where `[osname]`
-   and `[arch]` represent the OSGI operating system and processor identifiers.
-   eg, `native/linux/x86`.  (The exception being on Mac OS, where we build
-   fat binaries.)
+3. Now you can build the Java (eg `mvn install`).
 
-3. Build JNI libraries for your platform:
+## Using Eclipse
 
-        cd src/main/native/libjagged
-    	make
+Quick start guide for those unfamiliar with Maven and Eclipse:
 
-4. Copy the resultant binaries to `native/[osname]/[arch]`, the same place
-   as in step 2.
+1. Determine the location of your Eclipse Workspace (this cannot be inside
+   or beneath the jagged folder.)  Then configure the workspace directory
+   for Maven and set up the Eclipse project files:
 
-5. Now you can build the Java (eg `mvn install`).
+        mvn -Declipse.workspace=..\jagged-eclipse eclipse:configure-workspace
+        mvn eclipse:eclipse
+
+2. Open Eclipse, selecting the Eclipse workspace configured in step 1.
+3. Select File > Import > General > Existing Projects into Workspace.  In the
+   "Select Root Directory" prompt, browse to the location of your jagged
+   source.
 
 ## License
 

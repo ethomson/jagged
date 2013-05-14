@@ -15,7 +15,7 @@ Java_org_libgit2_jagged_core_NativeMethods_referenceResolve(
 	jobject repo_java,
 	jstring refname_java)
 {
-	char *refname = NULL;
+	const char *refname = NULL;
 	git_reference *symbolic = NULL, *resolved = NULL;
 	git_repository *repo;
 	int error = 0;

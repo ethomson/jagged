@@ -75,7 +75,7 @@ Java_org_libgit2_jagged_core_NativeMethods_repositoryClone(
 	git_repository *repo;
 	jobject repo_java = NULL;
 	int error = 0;
-
+	
 	assert(env);
 	assert(class);
 	assert(sourceurl_java);
@@ -84,7 +84,7 @@ Java_org_libgit2_jagged_core_NativeMethods_repositoryClone(
 	if ((path = git_java_jstring_to_utf8(env, path_java)) == NULL ||
 		(sourceurl = git_java_jstring_to_utf8(env, sourceurl_java)) == NULL)
 		return NULL;
-
+		
 	if ((error = git_clone(&repo, sourceurl, path, NULL)) < 0)
 		git_java_exception_throw_from_giterr(env, error);
 	else
@@ -109,7 +109,7 @@ Java_org_libgit2_jagged_core_NativeMethods_repositoryHead(
 
 	assert(env);
 	assert(class);
-	assert(repo);
+	assert(repo_java);
 
 	repo = git_java_handle_get(env, repo_java);
 

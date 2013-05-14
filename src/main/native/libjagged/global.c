@@ -45,3 +45,19 @@ Java_org_libgit2_jagged_core_NativeMethods_errorLast(
 	return error_java;
 }
 
+JNIEXPORT void JNICALL
+Java_org_libgit2_jagged_core_NativeMethods_threadsInit(
+	JNIEnv *env,
+	jclass class)
+{
+	git_threads_init();
+}
+
+JNIEXPORT void JNICALL
+Java_org_libgit2_jagged_core_NativeMethods_threadsShutdown(
+	JNIEnv *env,
+	jclass class)
+{
+	git_threads_shutdown();
+}
+

@@ -5,6 +5,11 @@
 #include <limits.h>
 #include <string.h>
 
+#ifdef GIT_WIN32
+# include <windows.h>
+# include <strsafe.h>
+#endif
+
 #include <jni.h>
 
 #include <git2.h>
@@ -41,7 +46,7 @@ GIT_INLINE(jstring) git_java_native_to_jstring(
 #if defined(_WIN32)
 	size_t len;
 
-	if (FAILED(StringCchLength(native, STRSAFE_MAX_CCH, &len)))
+	if (FAILED(StringCchLength(nativestr, STRSAFE_MAX_CCH, &len)))
 		return NULL;
 
 	/*

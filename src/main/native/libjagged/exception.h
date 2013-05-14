@@ -7,7 +7,9 @@
 
 #define GIT_JAVA_CLASS_EXCEPTION "org/libgit2/jagged/core/GitException"
 
-GIT_INLINE(void) git_java_exception_throw_from_giterr(JNIEnv *env, int errno)
+GIT_INLINE(void) git_java_exception_throw_from_giterr(
+	JNIEnv *env,
+	int error_type)
 {
 	const git_error *error = giterr_last();
 	const char *classname;
@@ -17,7 +19,7 @@ GIT_INLINE(void) git_java_exception_throw_from_giterr(JNIEnv *env, int errno)
 	assert(error);
 
 	/* TODO: switch based on type */
-	GIT_UNUSED(errno);
+	GIT_UNUSED(error_type);
 
 	classname = GIT_JAVA_CLASS_EXCEPTION;
 

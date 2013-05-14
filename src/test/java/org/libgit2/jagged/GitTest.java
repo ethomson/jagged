@@ -28,6 +28,10 @@ public abstract class GitTest
         {
             tempRoot = new File(System.getenv("TMPDIR"));
         }
+        else if (System.getenv("TEMP") != null)
+        {
+        	tempRoot = new File(System.getenv("TEMP"));
+        }
         else
         {
             throw new RuntimeException("Unable to determine temporary directory");

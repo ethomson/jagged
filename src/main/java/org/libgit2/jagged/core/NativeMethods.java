@@ -6,12 +6,33 @@ import org.libgit2.jagged.Repository;
 
 public class NativeMethods
 {
+	private static final Object finalizer;
+	
     static
     {
+    	NativeLoader.load("git2");
         NativeLoader.load("jagged");
+
+        threadsInit();
+        
+        finalizer = new Object() {
+        	@Override
+    		public void finalize()
+    		{
+    			threadsShutdown();
+    		}
+        };
     }
 
+    /*
+     * Global state
+     */
+
     public static native GitError errorLast();
+    
+    public static native void threadsInit();
+    
+    public static native void threadsShutdown();
 
     /*
      * Reference operations

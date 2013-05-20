@@ -103,6 +103,31 @@ GIT_INLINE(void) git_java_native_free(
 #endif
 }
 
+GIT_INLINE(jobjectArray)
+git_java_utf8_array_to_jstring_array(
+	JNIEnv *env,
+	jsize len,
+	const char **strarray_utf8)
+{
+	jobjectArray strarray_java;
+	jclass string_class;
+	jstring str;
+	jsize i;
+
+	if ((string_class = (*env)->FindClass(env, "java/lang/String")) == NULL ||
+		(strarray_java = (*env)->NewObjectArray(env, len, string_class, NULL)) == NULL)
+		return NULL;
+
+	for (i = 0; i < len; i++) {
+		if ((str = git_java_utf8_to_jstring(env, strarray_utf8[i])) == NULL)
+			return NULL;
+
+		(*env)->SetObjectArrayElement(env, strarray_java, i, str);
+	}
+
+	return strarray_java;
+}
+
 GIT_INLINE(void *)
 git_java_ptr_from_jlong(jlong handle)
 {

@@ -9,6 +9,31 @@
 #include "oid.h"
 
 JNIEXPORT jobject JNICALL
+Java_org_libgit2_jagged_core_NativeMethods_referenceList(
+	JNIEnv *env,
+	jclass class,
+	jobject repo_java)
+{
+	git_repository *repo;
+	git_strarray refs;
+	int error = 0;
+
+	assert(env);
+	assert(class);
+	assert(repo_java);
+
+	if ((repo = git_java_handle_get(env, repo_java)) == NULL)
+		return NULL;
+
+	if ((error = git_reference_list(&refs, repo)) < 0) {
+		git_java_exception_throw_from_giterr(env, error);
+		return NULL;
+	}
+
+	return git_java_utf8_array_to_jstring_array(env, (jsize)refs.count, refs.strings);
+}
+
+JNIEXPORT jobject JNICALL
 Java_org_libgit2_jagged_core_NativeMethods_referenceLookup(
 	JNIEnv *env,
 	jclass class,

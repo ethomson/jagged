@@ -39,6 +39,8 @@ public class NativeMethods
      * Reference operations
      */
 
+    public static native String[] referenceList(Repository repository);
+
     public static native Reference referenceLookup(Repository repository, String refName);
 
     public static native DirectReference referenceResolve(Repository repository, String refName);

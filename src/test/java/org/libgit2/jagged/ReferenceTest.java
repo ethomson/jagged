@@ -2,6 +2,9 @@ package org.libgit2.jagged;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -35,5 +38,24 @@ public class ReferenceTest
 
         Assert.assertTrue(headBranch instanceof DetachedHead);
         Assert.assertTrue(headBranch.isCurrentRepositoryHead());
+    }
+
+    @Test
+    public void testCanIterateReferences()
+    {
+        final String[] expected = new String[]
+        {
+            "refs/heads/master"
+        };
+        Repository repository = new Repository(setupRepository("testrepo").getAbsolutePath());
+
+        List<String> found = new ArrayList<String>();
+
+        for (Reference r : repository.getReferences())
+        {
+            found.add(r.getCanonicalName());
+        }
+
+        Assert.assertTrue(Arrays.equals(expected, found.toArray(new String[found.size()])));
     }
 }

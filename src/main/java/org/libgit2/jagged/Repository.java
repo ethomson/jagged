@@ -1,6 +1,8 @@
 package org.libgit2.jagged;
 
+import org.libgit2.jagged.Reference.SymbolicReference;
 import org.libgit2.jagged.core.Ensure;
+import org.libgit2.jagged.core.GitException;
 import org.libgit2.jagged.core.NativeHandle;
 import org.libgit2.jagged.core.NativeMethods;
 
@@ -9,9 +11,11 @@ import org.libgit2.jagged.core.NativeMethods;
  */
 public class Repository
 {
-	private boolean bare;
-	
+    private boolean bare;
+
     private final NativeHandle handle = new NativeHandle();
+
+    private final ReferenceCollection references = new ReferenceCollection(this);
 
     /**
      * Open an existing on-disk git repository. The returned Repository must be
@@ -23,7 +27,7 @@ public class Repository
     public Repository(final String path)
     {
         Ensure.argumentNotNullOrEmpty(path, "path");
-        
+
         NativeMethods.repositoryOpen(this, path);
 
         Ensure.nativeNotNull(handle);
@@ -49,7 +53,7 @@ public class Repository
     public static Repository init(final String path, boolean bare)
     {
         Ensure.argumentNotNullOrEmpty(path, "path");
-        
+
         return NativeMethods.repositoryInit(path, bare);
     }
 
@@ -67,28 +71,28 @@ public class Repository
     {
         Ensure.argumentNotNull(sourceUrl, "sourceUrl");
         Ensure.argumentNotNull(path, "path");
-        
+
         return NativeMethods.repositoryClone(sourceUrl, path);
     }
 
-	@SuppressWarnings("unused")
-	private Repository(final long handle, final boolean bare)
+    @SuppressWarnings("unused")
+    private Repository(final long handle, final boolean bare)
     {
-		this.handle.set(handle);
-		this.bare = bare;
+        this.handle.set(handle);
+        this.bare = bare;
     }
 
-	@SuppressWarnings("unused")
-	private void setHandle(long handle)
-	{
-		this.handle.set(handle);
-	}
-	
-	@SuppressWarnings("unused")
-	private long getHandle()
-	{
-		return handle.get();
-	}
+    @SuppressWarnings("unused")
+    private void setHandle(long handle)
+    {
+        this.handle.set(handle);
+    }
+
+    @SuppressWarnings("unused")
+    private long getHandle()
+    {
+        return handle.get();
+    }
 
     /**
      * Queries whether this repository is a "bare" repository, once that lacks a
@@ -99,17 +103,39 @@ public class Repository
      */
     public boolean isBare()
     {
-    	return bare;
+        return bare;
     }
 
     /**
-     * Gets the HEAD {@link Reference} of this repository.
+     * Enumerate the references for this repository.
      * 
-     * @return the reference pointed to by {@code HEAD}
+     * @return a collection of references for this repository
      */
-    public Reference getHead()
+    public ReferenceCollection getReferences()
     {
-    	return NativeMethods.repositoryHead(this);
+        return references;
+    }
+
+    /**
+     * Gets the branch of this repository pointed to by {@code HEAD}.
+     * 
+     * @return the branch pointed to by {@code HEAD}
+     */
+    public Branch getHead()
+    {
+        Reference reference = getReferences().getHead();
+
+        if (reference == null)
+        {
+            throw new GitException("Corrupt repository; the 'HEAD' reference is missing.");
+        }
+
+        if (reference instanceof SymbolicReference)
+        {
+            return new Branch(this, reference);
+        }
+
+        return new DetachedHead(this, reference);
     }
 
     /**

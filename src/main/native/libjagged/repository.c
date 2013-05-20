@@ -118,7 +118,7 @@ Java_org_libgit2_jagged_core_NativeMethods_repositoryHead(
 		return NULL;
 	}
 
-	ref_java = git_java_reference_init(env, ref);
+	ref_java = git_java_reference_init(env, repo_java, ref);
 
 	git_reference_free(ref);
 

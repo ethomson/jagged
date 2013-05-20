@@ -2,7 +2,6 @@ package org.libgit2.jagged.core;
 
 import java.text.MessageFormat;
 
-
 /**
  * Static utility methods for checking method inputs and outputs for valid
  * states. Unlike assertions (the language keyword) these keywords remain in
@@ -51,21 +50,21 @@ public final class Ensure
             throw new IllegalArgumentException(MessageFormat.format("{0} may not be empty", name));
         }
     }
-        
+
     public static final void nativeNotNull(Object obj)
     {
-    	if (obj == null)
-    	{
-    		throw new GitException("An unknown error occurred");
-    	}    	
+        if (obj == null)
+        {
+            throw new GitException("An unknown error occurred");
+        }
     }
-    
+
     public static final void nativeNotNull(NativeHandle handle)
     {
-    	if (handle.get() == 0)
-    	{
-    		throw new GitException("An unknown error occurred");
-    	}
+        if (handle.get() == 0)
+        {
+            throw new GitException("An unknown error occurred");
+        }
     }
 
     /**

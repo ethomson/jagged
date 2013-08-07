@@ -30,7 +30,7 @@ Java_org_libgit2_jagged_core_NativeMethods_referenceList(
 		return NULL;
 	}
 
-	return git_java_utf8_array_to_jstring_array(env, (jsize)refs.count, refs.strings);
+	return git_java_utf8_array_to_jstring_array(env, (jsize)refs.count, (const char **)refs.strings);
 }
 
 JNIEXPORT jobject JNICALL

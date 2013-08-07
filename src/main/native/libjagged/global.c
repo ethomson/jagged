@@ -50,6 +50,9 @@ Java_org_libgit2_jagged_core_NativeMethods_threadsInit(
 	JNIEnv *env,
 	jclass class)
 {
+	GIT_UNUSED(env);
+	GIT_UNUSED(class);
+
 	git_threads_init();
 }
 
@@ -58,6 +61,9 @@ Java_org_libgit2_jagged_core_NativeMethods_threadsShutdown(
 	JNIEnv *env,
 	jclass class)
 {
+	GIT_UNUSED(env);
+	GIT_UNUSED(class);
+
 	git_threads_shutdown();
 }
 

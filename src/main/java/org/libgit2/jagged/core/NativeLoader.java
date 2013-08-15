@@ -60,7 +60,7 @@ public class NativeLoader
         {
             libraryPath = new File(architecturePath, mappedLibraryName);        	
         }
-        
+
         System.load(libraryPath.getAbsolutePath());
     }
 }

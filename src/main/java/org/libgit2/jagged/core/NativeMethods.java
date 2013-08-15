@@ -1,5 +1,6 @@
 package org.libgit2.jagged.core;
 
+import org.libgit2.jagged.Common;
 import org.libgit2.jagged.Reference;
 import org.libgit2.jagged.Reference.DirectReference;
 import org.libgit2.jagged.Repository;
@@ -34,6 +35,25 @@ public class NativeMethods
     public static native void threadsInit();
 
     public static native void threadsShutdown();
+
+    /*
+     * Common operations
+     */
+    public static native Common.Version getLibgit2Version();
+
+    public static native int getLibgit2Capabilities();
+
+    public static native int getMmapWindowSize();
+
+    public static native void setMmapWindowSize(int size);
+
+    public static native int getMmapWindowMappedLimit();
+
+    public static native void setMmapWindowMappedLimit(int size);
+
+    public static native String getSearchPath(int level);
+
+    public static native void setSearchPath(int level, String path);
 
     /*
      * Reference operations

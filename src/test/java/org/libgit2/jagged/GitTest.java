@@ -17,37 +17,38 @@ public abstract class GitTest
 
     static
     {
-    	try
-    	{
-	        resourcesRoot = new File("src/test/resources");
-	        
-	        if (!resourcesRoot.exists())
-	        {
-	        	resourcesRoot = new File(GitTest.class.getResource("/testrepo").getFile()).getParentFile();
-	        }
-	
-	        if (System.getenv("TMPDIR") != null)
-	        {
-	            tempRoot = new File(System.getenv("TMPDIR"));
-	        }
-	        else if (System.getenv("TEMP") != null)
-	        {
-	        	tempRoot = new File(System.getenv("TEMP"));
-	        }
-	        else
-	        {
-	            throw new RuntimeException("Unable to determine temporary directory. Please define TMPDIR or TEMP environment variable");
-	        }
-	
-	        String instanceTempDir = "jagged_test_" + Integer.toString((int) (Math.random() * Integer.MAX_VALUE));
-	        tempDir = new File(tempRoot, instanceTempDir);
-	        
-    	}
-    	catch (RuntimeException e)
-    	{
-    		e.printStackTrace();
-    		throw e;
-    	}
+        try
+        {
+            resourcesRoot = new File("src/test/resources");
+
+            if (!resourcesRoot.exists())
+            {
+                resourcesRoot = new File(GitTest.class.getResource("/testrepo").getFile()).getParentFile();
+            }
+
+            if (System.getenv("TMPDIR") != null)
+            {
+                tempRoot = new File(System.getenv("TMPDIR"));
+            }
+            else if (System.getenv("TEMP") != null)
+            {
+                tempRoot = new File(System.getenv("TEMP"));
+            }
+            else
+            {
+                throw new RuntimeException(
+                    "Unable to determine temporary directory. Please define TMPDIR or TEMP environment variable");
+            }
+
+            String instanceTempDir = "jagged_test_" + Integer.toString((int) (Math.random() * Integer.MAX_VALUE));
+            tempDir = new File(tempRoot, instanceTempDir);
+
+        }
+        catch (RuntimeException e)
+        {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @Before

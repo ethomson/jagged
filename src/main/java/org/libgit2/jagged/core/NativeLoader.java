@@ -19,13 +19,13 @@ public class NativeLoader
      */
     public static void load(final String libraryName)
     {
-    	String nativeLibraryPath = System.getProperty("org.libgit2.jagged.nativeLibraryPath");
+        String nativeLibraryPath = System.getProperty("org.libgit2.jagged.nativeLibraryPath");
 
-    	/* Provide a mediocre default when the system property is unset. */
-    	if (nativeLibraryPath == null)
-    	{
-    		nativeLibraryPath = "native";
-    	}
+        /* Provide a mediocre default when the system property is unset. */
+        if (nativeLibraryPath == null)
+        {
+            nativeLibraryPath = "native";
+        }
 
         final File operatingSystemPath =
             new File(nativeLibraryPath, Platform.getCurrentPlatform().getOperatingSystem().getOsgiName());
@@ -48,19 +48,19 @@ public class NativeLoader
         {
             mappedLibraryName = System.mapLibraryName(libraryName);
         }
-        
+
         /*
-         * Try the operating system path first - some platforms (eg, Mac OS) can 
-         * support "fat" binaries that are archives of the libraries for the multiple
-         * architectures.
+         * Try the operating system path first - some platforms (eg, Mac OS) can
+         * support "fat" binaries that are archives of the libraries for the
+         * multiple architectures.
          */
         File libraryPath = new File(operatingSystemPath, mappedLibraryName);
-        
+
         if (!libraryPath.exists())
         {
-            libraryPath = new File(architecturePath, mappedLibraryName);        	
+            libraryPath = new File(architecturePath, mappedLibraryName);
         }
-        
+
         System.load(libraryPath.getAbsolutePath());
     }
 }

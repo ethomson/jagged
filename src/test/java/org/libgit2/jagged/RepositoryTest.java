@@ -39,14 +39,14 @@ public class RepositoryTest
         }
         catch (GitException e)
         {
-        	if (Platform.getCurrentPlatform().getOperatingSystem().equals(OperatingSystem.WINDOWS))
-        	{
-        		caught = e.getMessage().trim().endsWith("The system cannot find the file specified.");
-        	}
-        	else
-        	{
-                caught = e.getMessage().endsWith("No such file or directory");        		
-        	}
+            if (Platform.getCurrentPlatform().getOperatingSystem().equals(OperatingSystem.WINDOWS))
+            {
+                caught = e.getMessage().trim().endsWith("The system cannot find the file specified.");
+            }
+            else
+            {
+                caught = e.getMessage().endsWith("No such file or directory");
+            }
 
             if (!caught)
                 throw e;

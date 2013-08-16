@@ -153,3 +153,76 @@ done:
 	git_java_utf8_free(env, path_java, path);
 
 }
+
+JNIEXPORT void JNICALL
+Java_org_libgit2_jagged_core_NativeMethods_setCacheObjectLimit(
+	JNIEnv *env,
+	jclass class,
+    jint type,
+    jint size)
+{
+
+    GIT_UNUSED(class);
+
+	int error = 0;
+
+    if ((error = git_libgit2_opts(GIT_OPT_SET_CACHE_OBJECT_LIMIT, type, size)) < 0)
+        git_java_exception_throw_from_giterr(env, error);
+
+}
+
+JNIEXPORT void JNICALL
+Java_org_libgit2_jagged_core_NativeMethods_setCacheMaxSize(
+	JNIEnv *env,
+	jclass class,
+    jint maxStorageBytes)
+{
+
+    GIT_UNUSED(class);
+
+	int error = 0;
+
+    if ((error = git_libgit2_opts(GIT_OPT_SET_CACHE_MAX_SIZE, maxStorageBytes)) < 0)
+        git_java_exception_throw_from_giterr(env, error);
+
+}
+
+JNIEXPORT void JNICALL
+Java_org_libgit2_jagged_core_NativeMethods_setEnableCaching(
+	JNIEnv *env,
+	jclass class,
+    jboolean enabled)
+{
+
+    GIT_UNUSED(class);
+
+	int error = 0;
+
+    if ((error = git_libgit2_opts(GIT_OPT_ENABLE_CACHING, (int) enabled)) < 0)
+        git_java_exception_throw_from_giterr(env, error);
+
+}
+
+JNIEXPORT jobject JNICALL
+Java_org_libgit2_jagged_core_NativeMethods_getCachedMemory(
+	JNIEnv *env,
+	jclass class)
+{
+
+    GIT_UNUSED(class);
+
+	int error = 0;
+    ssize_t current, allowed;
+
+    if ((error = git_libgit2_opts(GIT_OPT_GET_CACHED_MEMORY, &current, &allowed)) < 0)
+    {
+        git_java_exception_throw_from_giterr(env, error);
+    }
+
+    jclass cmCls = (*env)->FindClass(env, GIT_JAVA_CLASS_COMMON_CACHED_MEMORY);
+
+    jmethodID midInit = (*env)->GetMethodID(env, cmCls, "<init>", "(II)V");
+    if (NULL == midInit) return NULL;
+    jobject cmObj = (*env)->NewObject(env, cmCls, midInit, current, allowed);
+    return cmObj;
+}

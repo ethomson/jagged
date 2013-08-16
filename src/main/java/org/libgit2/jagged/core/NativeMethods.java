@@ -55,6 +55,14 @@ public class NativeMethods
 
     public static native void setSearchPath(int level, String path);
 
+    public static native void setCacheObjectLimit(int type, int size);
+
+    public static native void setCacheMaxSize(int maxStorageBytes);
+
+    public static native void setEnableCaching(boolean enabled);
+
+    public static native Common.CachedMemory getCachedMemory();
+
     /*
      * Reference operations
      */

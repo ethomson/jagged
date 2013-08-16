@@ -6,9 +6,11 @@ import static junit.framework.Assert.assertTrue;
 import java.util.Set;
 
 import org.junit.Test;
+import org.libgit2.jagged.Common.CachedMemory;
 
 public class CommonTest extends GitTest
 {
+
     @Test
     public void testCanGetVersion()
     {
@@ -53,6 +55,34 @@ public class CommonTest extends GitTest
         Common.setSearchPath(Common.ConfigLevel.SYSTEM, path + "/git");
         String newPath = Common.getSearchPath(Common.ConfigLevel.SYSTEM);
         assertTrue(newPath.endsWith(path + "/git"));
+    }
+
+    @Test
+    public void testCanSetCacheObjectLimit()
+    {
+        Common.setCacheObjectLimit(Common.ObjType.BLOB, 2 * 1024 * 1024);
+    }
+
+    @Test
+    public void testCanSetCacheMaxSize()
+    {
+        Common.setCacheMaxSize(128 * 1024 * 1024);
+        CachedMemory cachedMemory = Common.getCachedMemory();
+        assertEquals(128 * 1024 * 1024, cachedMemory.getAllowed());
+    }
+
+    @Test
+    public void testCanSetEnableCaching()
+    {
+        Common.setEnableCaching(false);
+        Common.setEnableCaching(true);
+    }
+
+    @Test
+    public void testCanGetCachedMemory()
+    {
+        CachedMemory cachedMemory = Common.getCachedMemory();
+        assertTrue(cachedMemory.getAllowed() > 0);
     }
 
 }

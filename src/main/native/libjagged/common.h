@@ -6,6 +6,7 @@
 #include "util.h"
 
 #define GIT_JAVA_CLASS_COMMON_VERSION "org/libgit2/jagged/Common$Version"
+#define GIT_JAVA_CLASS_COMMON_CACHED_MEMORY "org/libgit2/jagged/Common$CachedMemory"
 
 #ifndef git__malloc
 #define git__malloc(Z) malloc(Z)

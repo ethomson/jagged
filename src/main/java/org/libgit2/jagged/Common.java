@@ -137,46 +137,120 @@ public class Common
     }
 
     /**
-     * Set the search path for a level of config data. The search path
-     * applied to shared attributes and ignore files, too. - `path` lists
-     * directories delimited by GIT_PATH_LIST_SEPARATOR. > Pass NULL to reset to
-     * the default (generally based on environment > variables). Use magic path
-     * `$PATH` to include the old value > of the path (if you want to prepend or
-     * append, for instance). > >.
+     * Set the search path for a level of config data. The search path applied
+     * to shared attributes and ignore files, too. - `path` lists directories
+     * delimited by GIT_PATH_LIST_SEPARATOR. Pass NULL to reset to the default
+     * (generally based on environment variables). Use magic path `$PATH` to
+     * include the old value of the path (if you want to prepend or append, for
+     * instance).
      */
     public static void setSearchPath(ConfigLevel level, String path)
     {
         NativeMethods.setSearchPath(level.getValue(), path);
     }
 
-    /*
-     * 
-     * * opts(GIT_OPT_SET_CACHE_OBJECT_LIMIT, git_otype type, size_t size)
-     * 
-     * > Set the maximum data size for the given type of object to be >
-     * considered eligible for caching in memory. Setting to value to > zero
-     * means that that type of object will not be cached. > Defaults to 0 for
-     * GIT_OBJ_BLOB (i.e. won't cache blobs) and 4k > for GIT_OBJ_COMMIT,
-     * GIT_OBJ_TREE, and GIT_OBJ_TAG.
-     * 
-     * * opts(GIT_OPT_SET_CACHE_MAX_SIZE, ssize_t max_storage_bytes)
-     * 
-     * > Set the maximum total data size that will be cached in memory > across
-     * all repositories before libgit2 starts evicting objects > from the cache.
-     * This is a soft limit, in that the library might > briefly exceed it, but
-     * will start aggressively evicting objects > from cache when that happens.
-     * The default cache size is 256Mb.
-     * 
-     * * opts(GIT_OPT_ENABLE_CACHING, int enabled)
-     * 
-     * > Enable or disable caching completely. > > Because caches are
-     * repository-specific, disabling the cache > cannot immediately clear all
-     * cached objects, but each cache will > be cleared on the next attempt to
-     * update anything in it.
-     * 
-     * * opts(GIT_OPT_GET_CACHED_MEMORY, ssize_t *current, ssize_t *allowed)
-     * 
-     * > Get the current bytes in cache and the maximum that would be > allowed
-     * in the cache.
+    /** Basic type (loose or packed) of any Git object. */
+    enum ObjType
+    {
+        /** < Object can be any of the following */
+        ANY(-2),
+        /** < Object is invalid. */
+        BAD(-1),
+        /** < Reserved for future use. */
+        EXT1(0),
+        /** < A commit object. */
+        COMMIT(1),
+        /** < A tree (directory listing) object. */
+        TREE(2),
+        /** < A file revision object. */
+        BLOB(3),
+        /** < An annotated tag object. */
+        TAG(4),
+        /** < Reserved for future use. */
+        EXT2(5),
+        /** < A delta, base is given by an offset. */
+        OFS_DELTA(6),
+        /** < A delta, base is given by object id. */
+        REF_DELTA(7);
+
+        private final int value;
+
+        private ObjType(int value)
+        {
+            this.value = value;
+        }
+
+        int getValue()
+        {
+            return value;
+        }
+
+    };
+
+    /**
+     * Set the maximum data size for the given type of object to be considered
+     * eligible for caching in memory. Setting to value to zero means that that
+     * type of object will not be cached. Defaults to 0 for BLOB (i.e. won't
+     * cache blobs) and 4k for COMMIT, TREE, and TAG.
      */
+    public static void setCacheObjectLimit(ObjType type, int size)
+    {
+        NativeMethods.setCacheObjectLimit(type.getValue(), size);
+    }
+
+    /**
+     * Set the maximum total data size that will be cached in memory across all
+     * repositories before libgit2 starts evicting objects from the cache. This
+     * is a soft limit, in that the library might briefly exceed it, but will
+     * start aggressively evicting objects from cache when that happens. The
+     * default cache size is 256Mb.
+     */
+    public static void setCacheMaxSize(int maxStorageBytes)
+    {
+        NativeMethods.setCacheMaxSize(maxStorageBytes);
+    }
+
+    /**
+     * Enable or disable caching completely. Because caches are
+     * repository-specific, disabling the cache cannot immediately clear all
+     * cached objects, but each cache will be cleared on the next attempt to
+     * update anything in it.
+     */
+    public static void setEnableCaching(boolean enabled)
+    {
+        NativeMethods.setEnableCaching(enabled);
+    }
+
+    public static class CachedMemory
+    {
+        private int current;
+        private int allowed;
+
+        public CachedMemory(int current, int allowed)
+        {
+            super();
+            this.current = current;
+            this.allowed = allowed;
+        }
+
+        public int getCurrent()
+        {
+            return current;
+        }
+
+        public int getAllowed()
+        {
+            return allowed;
+        }
+    }
+
+    /**
+     * Get the current bytes in cache and the maximum that would be allowed in
+     * the cache
+     */
+    public static CachedMemory getCachedMemory()
+    {
+        return NativeMethods.getCachedMemory();
+    }
+
 }

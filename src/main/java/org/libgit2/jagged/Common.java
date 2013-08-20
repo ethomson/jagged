@@ -1,8 +1,10 @@
 package org.libgit2.jagged;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.libgit2.jagged.core.Ensure;
 import org.libgit2.jagged.core.NativeMethods;
 
 public class Common
@@ -128,6 +130,11 @@ public class Common
         }
     }
 
+    public static String getPathListSeparator()
+    {
+        return File.pathSeparator;
+    }
+
     /**
      * Get the search path for a given level of config data.
      */
@@ -139,38 +146,40 @@ public class Common
     /**
      * Set the search path for a level of config data. The search path applied
      * to shared attributes and ignore files, too. - `path` lists directories
-     * delimited by GIT_PATH_LIST_SEPARATOR. Pass NULL to reset to the default
-     * (generally based on environment variables). Use magic path `$PATH` to
-     * include the old value of the path (if you want to prepend or append, for
-     * instance).
+     * delimited by {@link #getPathListSeparator()}. Pass NULL to reset to the
+     * default (generally based on environment variables). Use magic path
+     * `$PATH` to include the old value of the path (if you want to prepend or
+     * append, for instance).
      */
     public static void setSearchPath(ConfigLevel level, String path)
     {
+        Ensure.argumentNotNullOrEmpty(path, "path");
+
         NativeMethods.setSearchPath(level.getValue(), path);
     }
 
     /** Basic type (loose or packed) of any Git object. */
     enum ObjType
     {
-        /** < Object can be any of the following */
+        /** Object can be any of the following */
         ANY(-2),
-        /** < Object is invalid. */
+        /** Object is invalid. */
         BAD(-1),
-        /** < Reserved for future use. */
+        /** Reserved for future use. */
         EXT1(0),
-        /** < A commit object. */
+        /** A commit object. */
         COMMIT(1),
-        /** < A tree (directory listing) object. */
+        /** A tree (directory listing) object. */
         TREE(2),
-        /** < A file revision object. */
+        /** A file revision object. */
         BLOB(3),
-        /** < An annotated tag object. */
+        /** An annotated tag object. */
         TAG(4),
-        /** < Reserved for future use. */
+        /** Reserved for future use. */
         EXT2(5),
-        /** < A delta, base is given by an offset. */
+        /** A delta, base is given by an offset. */
         OFS_DELTA(6),
-        /** < A delta, base is given by object id. */
+        /** A delta, base is given by object id. */
         REF_DELTA(7);
 
         private final int value;

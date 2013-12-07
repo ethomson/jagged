@@ -1,0 +1,14 @@
+language: java
+
+jdk:
+ - oraclejdk7
+
+script: scripts/build.sh
+
+notifications:
+ recipients:
+  - ethomson@edwardthomson.cpom
+ email:
+   on_success: change
+   on_failure: always
+

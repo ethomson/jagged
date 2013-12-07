@@ -1,0 +1,15 @@
+#!/bin/sh
+
+#
+# Run this script the first time you work on jagged
+#
+
+git submodule init
+git submodule update
+
+cd src/main/native/
+make
+make install
+
+cd ../../..
+mvn install

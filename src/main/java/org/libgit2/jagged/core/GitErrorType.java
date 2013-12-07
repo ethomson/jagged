@@ -10,14 +10,43 @@ import java.util.Map;
 enum GitErrorType
 {
     /**
+     * No error.
+     */
+    GITERR_NONE(0),
+
+    /**
      * libgit2 has run out of memory.
      */
-    GITERR_NOMEMORY(0),
+    GITERR_NOMEMORY(1),
 
     /**
      * An error occurred with an operating system call.
      */
-    GITERR_OS(1),
+    GITERR_OS(2),
+
+    GITERR_INVALID(3),
+    GITERR_REFERENCE(4),
+    GITERR_ZLIB(5),
+    GITERR_REPOSITORY(6),
+    GITERR_CONFIG(7),
+    GITERR_REGEX(8),
+    GITERR_ODB(9),
+    GITERR_INDEX(10),
+    GITERR_OBJECT(11),
+    GITERR_NET(12),
+    GITERR_TAG(13),
+    GITERR_TREE(14),
+    GITERR_INDEXER(15),
+    GITERR_SSL(16),
+    GITERR_SUBMODULE(17),
+    GITERR_THREAD(18),
+    GITERR_STASH(19),
+    GITERR_CHECKOUT(20),
+    GITERR_FETCHHEAD(21),
+    GITERR_MERGE(22),
+    GITERR_SSH(23),
+    GITERR_FILTER(24),
+    GITERR_REVERT(25),
 
     /**
      * An unknown error (an error occurred marshalling the error data itself).

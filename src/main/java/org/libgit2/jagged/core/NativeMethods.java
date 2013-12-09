@@ -1,8 +1,10 @@
 package org.libgit2.jagged.core;
 
+import org.libgit2.jagged.Options;
 import org.libgit2.jagged.Reference;
 import org.libgit2.jagged.Reference.DirectReference;
 import org.libgit2.jagged.Repository;
+import org.libgit2.jagged.Version;
 
 public class NativeMethods
 {
@@ -34,6 +36,34 @@ public class NativeMethods
     public static native void threadsInit();
 
     public static native void threadsShutdown();
+
+    /*
+     * Options
+     */
+
+    public static native int getCapabilities();
+
+    public static native Version getLibGit2Version();
+
+    public static native void setOptionMmapWindowSize(long size);
+
+    public static native long getOptionMmapWindowSize();
+
+    public static native void setOptionMmapWindowMappedLimit(long limit);
+
+    public static native long getOptionMmapWindowMappedLimit();
+
+    public static native void setOptionSearchPath(int level, String path);
+
+    public static native String getOptionSearchPath(int level);
+
+    public static native void setOptionEnableCaching(boolean enabled);
+
+    public static native void setOptionCacheObjectLimit(int type, long size);
+
+    public static native void setOptionCacheMaxSize(long max);
+
+    public static native Options.CacheStatistics getOptionCachedStatistics();
 
     /*
      * Reference operations

@@ -19,7 +19,7 @@
 #include "exception.h"
 
 #define GITERR_CHECK_ALLOC(ptr) \
-	if (ptr == NULL) { \
+	if ((ptr) == NULL) { \
 		giterr_set_oom(); \
 		return -1; \
 	}
@@ -28,6 +28,8 @@
 
 #ifdef _WIN32
 typedef WCHAR native_char;
+
+typedef SSIZE_T ssize_t;
 #else
 typedef char native_char;
 #endif

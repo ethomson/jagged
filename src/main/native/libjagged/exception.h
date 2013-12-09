@@ -43,4 +43,15 @@ GIT_INLINE(void) git_java_exception_throw(JNIEnv *env, const char *message)
 		(*env)->FatalError(env, message);
 }
 
+GIT_INLINE(void) git_java_exception_throw_oom(JNIEnv *env)
+{
+	jclass exception_class;
+
+	assert(env);
+
+	if ((exception_class = (*env)->FindClass(env, "java/lang/OutOfMemoryError")) == NULL ||
+		(*env)->ThrowNew(env, exception_class, "Native memory space") != 0)
+		(*env)->FatalError(env, "Out of memory");
+}
+
 #endif /* GIT_JAVA_EXCEPTION_H */

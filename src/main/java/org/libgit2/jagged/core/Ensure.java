@@ -51,6 +51,40 @@ public final class Ensure
         }
     }
 
+    /**
+     * Throws {@link IllegalArgumentException} if the given object is less than
+     * zero.
+     * 
+     * @param value
+     *        the value to check for negativity
+     * @param name
+     *        the name of the variable to check
+     */
+    public static final void argumentNotNegative(final int value, final String name)
+    {
+        if (value < 0)
+        {
+            throw new IllegalArgumentException(MessageFormat.format("{0} may not be negative", name));
+        }
+    }
+
+    /**
+     * Throws {@link IllegalArgumentException} if the given object is less than
+     * zero.
+     * 
+     * @param value
+     *        the value to check for negativity
+     * @param name
+     *        the name of the variable to check
+     */
+    public static final void argumentNotNegative(final long value, final String name)
+    {
+        if (value < 0)
+        {
+            throw new IllegalArgumentException(MessageFormat.format("{0} may not be negative", name));
+        }
+    }
+
     public static final void nativeNotNull(Object obj)
     {
         if (obj == null)

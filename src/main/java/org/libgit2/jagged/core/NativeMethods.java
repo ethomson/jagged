@@ -15,14 +15,14 @@ public class NativeMethods
         NativeLoader.load("git2");
         NativeLoader.load("jagged");
 
-        threadsInit();
+        globalThreadsInit();
 
         finalizer = new Object()
         {
             @Override
             public void finalize()
             {
-                threadsShutdown();
+                globalThreadsShutdown();
             }
         };
     }
@@ -31,19 +31,19 @@ public class NativeMethods
      * Global state
      */
 
-    public static native GitError errorLast();
+    public static native GitError globalErrorLast();
 
-    public static native void threadsInit();
+    public static native void globalThreadsInit();
 
-    public static native void threadsShutdown();
+    public static native void globalThreadsShutdown();
+
+    public static native int globalGetCapabilities();
+
+    public static native Version globalGetLibGit2Version();
 
     /*
      * Options
      */
-
-    public static native int getCapabilities();
-
-    public static native Version getLibGit2Version();
 
     public static native void optionSetMmapWindowSize(long size);
 

@@ -8,39 +8,7 @@
 #include "reference.h"
 #include "oid.h"
 
-#define GIT_JAVA_CLASS_VERSION "org/libgit2/jagged/Version"
 #define GIT_JAVA_CLASS_OPTION_CACHED_STATISTICS "org/libgit2/jagged/Options$CacheStatistics"
-
-JNIEXPORT jint JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_getCapabilities(
-	JNIEnv *env,
-	jclass class)
-{
-	GIT_UNUSED(env);
-	GIT_UNUSED(class);
-
-	return git_libgit2_capabilities();
-}
-
-JNIEXPORT jobject JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_getLibGit2Version(
-	JNIEnv *env,
-	jclass class)
-{
-	jclass version_class;
-	jmethodID version_ctormethod;
-	int major, minor, revision;
-
-	GIT_UNUSED(class);
-
-	git_libgit2_version(&major, &minor, &revision);
-
-	if ((version_class = (*env)->FindClass(env, GIT_JAVA_CLASS_VERSION)) == NULL ||
-		(version_ctormethod = (*env)->GetMethodID(env, version_class, "<init>", "(III)V")) == NULL)
-		return NULL;
-
-	return (*env)->NewObject(env, version_class, version_ctormethod, major, minor, revision);
-}
 
 JNIEXPORT void JNICALL
 Java_org_libgit2_jagged_core_NativeMethods_optionSetMmapWindowSize(

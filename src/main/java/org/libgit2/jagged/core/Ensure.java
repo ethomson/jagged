@@ -154,7 +154,7 @@ public final class Ensure
 
     private static final void nativeError(int result)
     {
-        GitError error = NativeMethods.errorLast();
+        GitError error = NativeMethods.globalErrorLast();
 
         if (error == null)
         {

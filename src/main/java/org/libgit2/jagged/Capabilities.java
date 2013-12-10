@@ -19,7 +19,7 @@ public class Capabilities
         @Override
         protected Capabilities call()
         {
-            return new Capabilities(NativeMethods.getCapabilities());
+            return new Capabilities(NativeMethods.globalGetCapabilities());
         }
     };
 

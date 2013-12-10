@@ -12,7 +12,7 @@ public class Version
         @Override
         protected Version call()
         {
-            return NativeMethods.getLibGit2Version();
+            return NativeMethods.globalGetLibGit2Version();
         }
     };
 

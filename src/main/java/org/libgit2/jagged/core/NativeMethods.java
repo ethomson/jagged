@@ -1,5 +1,7 @@
 package org.libgit2.jagged.core;
 
+import org.libgit2.jagged.GitObject;
+import org.libgit2.jagged.ObjectId;
 import org.libgit2.jagged.Options;
 import org.libgit2.jagged.Reference;
 import org.libgit2.jagged.Reference.DirectReference;
@@ -40,6 +42,12 @@ public class NativeMethods
     public static native int globalGetCapabilities();
 
     public static native Version globalGetLibGit2Version();
+
+    /*
+     * Objects
+     */
+
+    public static native <T extends GitObject> T objectLookup(Repository repository, ObjectId oid, int type);
 
     /*
      * Options

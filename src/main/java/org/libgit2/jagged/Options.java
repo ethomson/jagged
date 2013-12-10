@@ -37,7 +37,7 @@ public class Options
     {
         Ensure.argumentNotNegative(size, "size");
 
-        NativeMethods.setOptionMmapWindowSize(size);
+        NativeMethods.optionSetMmapWindowSize(size);
     }
 
     /**
@@ -47,7 +47,7 @@ public class Options
      */
     public static long getMmapWindowSize()
     {
-        return NativeMethods.getOptionMmapWindowSize();
+        return NativeMethods.optionGetMmapWindowSize();
     }
 
     /**
@@ -60,7 +60,7 @@ public class Options
     {
         Ensure.argumentNotNegative(limit, "limit");
 
-        NativeMethods.setOptionMmapWindowMappedLimit(limit);
+        NativeMethods.optionSetMmapWindowMappedLimit(limit);
     }
 
     /**
@@ -70,7 +70,7 @@ public class Options
      */
     public static long getMmapWindowMappedLimit()
     {
-        return NativeMethods.getOptionMmapWindowMappedLimit();
+        return NativeMethods.optionGetMmapWindowMappedLimit();
     }
 
     /**
@@ -91,7 +91,7 @@ public class Options
     {
         Ensure.argumentNotNull(level, "level");
 
-        NativeMethods.setOptionSearchPath(level.getValue(), path);
+        NativeMethods.optionSetSearchPath(level.getValue(), path);
     }
 
     /**
@@ -105,7 +105,7 @@ public class Options
     {
         Ensure.argumentNotNull(level, "level");
 
-        return NativeMethods.getOptionSearchPath(level.getValue());
+        return NativeMethods.optionGetSearchPath(level.getValue());
     }
 
     /**
@@ -116,7 +116,7 @@ public class Options
      */
     public static void setEnableCaching(boolean enabled)
     {
-        NativeMethods.setOptionEnableCaching(enabled);
+        NativeMethods.optionSetEnableCaching(enabled);
     }
 
     /**
@@ -134,7 +134,7 @@ public class Options
         Ensure.argumentNotNull(type, "type");
         Ensure.argumentNotNegative(size, "size");
 
-        NativeMethods.setOptionCacheObjectLimit(type.getValue(), size);
+        NativeMethods.optionSetCacheObjectLimit(type.getValue(), size);
     }
 
     /**
@@ -147,7 +147,7 @@ public class Options
     {
         Ensure.argumentNotNegative(max, "max");
 
-        NativeMethods.setOptionCacheMaxSize(max);
+        NativeMethods.optionSetCacheMaxSize(max);
     }
 
     /**
@@ -158,6 +158,6 @@ public class Options
      */
     public static CacheStatistics getCachedStatistics()
     {
-        return NativeMethods.getOptionCachedStatistics();
+        return NativeMethods.optionGetCachedStatistics();
     }
 }

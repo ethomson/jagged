@@ -25,8 +25,8 @@ GIT_INLINE(jobject) git_java_reference_init(JNIEnv *env, jobject repo_java, git_
 		jobject target_java;
 
 		if ((ref_class = (*env)->FindClass(env, GIT_JAVA_CLASS_REFERENCE_DIRECT)) == NULL ||
-			(ref_initmethod = (*env)->GetMethodID(env, ref_class, "<init>", "(Lorg/libgit2/jagged/Repository;Ljava/lang/String;Lorg/libgit2/jagged/Oid;)V")) == NULL ||
-			(target_java = git_java_oid_init(env, git_reference_target(ref))) == NULL)
+			(ref_initmethod = (*env)->GetMethodID(env, ref_class, "<init>", "(Lorg/libgit2/jagged/Repository;Ljava/lang/String;Lorg/libgit2/jagged/ObjectId;)V")) == NULL ||
+			(target_java = git_java_objectid_init(env, git_reference_target(ref))) == NULL)
 			return NULL;
 
 		return (*env)->NewObject(env, ref_class, ref_initmethod, repo_java, name_java, target_java);

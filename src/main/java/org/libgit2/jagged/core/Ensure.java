@@ -14,6 +14,22 @@ public final class Ensure
     }
 
     /**
+     * Throws {@link IllegalArgumentException} if the given value is not valid.
+     * 
+     * @param valid
+     *        whether the argument was valid
+     * @param expression
+     *        the expression that failed
+     */
+    public static final void argument(final boolean valid, final String expression)
+    {
+        if (!valid)
+        {
+            throw new IllegalArgumentException(expression);
+        }
+    }
+
+    /**
      * Throws {@link NullPointerException} if the given object is null.
      * 
      * @param obj

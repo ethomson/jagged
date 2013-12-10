@@ -28,7 +28,7 @@ Java_org_libgit2_jagged_core_NativeMethods_repositoryOpen(
 		return;
 
 	if ((error = git_repository_open(&repo, path)) < 0)
-		git_java_exception_throw_from_giterr(env, error);
+		git_java_exception_throw_giterr(env, error);
 	else
 		git_java_handle_set(env, repo_java, repo);
 
@@ -55,7 +55,7 @@ Java_org_libgit2_jagged_core_NativeMethods_repositoryInit(
 		return NULL;
 
 	if ((error = git_repository_init(&repo, path, bare ? 1 : 0)) < 0)
-		git_java_exception_throw_from_giterr(env, error);
+		git_java_exception_throw_giterr(env, error);
 	else
 		repo_java = git_java_repository_init(env, repo);
 
@@ -86,7 +86,7 @@ Java_org_libgit2_jagged_core_NativeMethods_repositoryClone(
 		return NULL;
 		
 	if ((error = git_clone(&repo, sourceurl, path, NULL)) < 0)
-		git_java_exception_throw_from_giterr(env, error);
+		git_java_exception_throw_giterr(env, error);
 	else
 		repo_java = git_java_repository_init(env, repo);
 
@@ -114,7 +114,7 @@ Java_org_libgit2_jagged_core_NativeMethods_repositoryHead(
 	repo = git_java_handle_get(env, repo_java);
 
 	if ((error = git_repository_head(&ref, repo)) < 0) {
-		git_java_exception_throw_from_giterr(env, error);
+		git_java_exception_throw_giterr(env, error);
 		return NULL;
 	}
 

@@ -5,6 +5,4 @@ if [ "$TMPDIR" = "" ]; then
 	mkdir $TMPDIR
 fi
 
-git submodule update --init --recursive
-(cd src/main/native && make install)
-mvn install
+git submodule update --init --recursive && make install && mvn install

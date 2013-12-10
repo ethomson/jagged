@@ -26,7 +26,7 @@ Java_org_libgit2_jagged_core_NativeMethods_referenceList(
 		return NULL;
 
 	if ((error = git_reference_list(&refs, repo)) < 0) {
-		git_java_exception_throw_from_giterr(env, error);
+		git_java_exception_throw_giterr(env, error);
 		return NULL;
 	}
 
@@ -58,7 +58,7 @@ Java_org_libgit2_jagged_core_NativeMethods_referenceLookup(
 		goto done;
 
 	if ((error = git_reference_lookup(&ref, repo, refname)) < 0) {
-		git_java_exception_throw_from_giterr(env, error);
+		git_java_exception_throw_giterr(env, error);
 		goto done;
 	}
 
@@ -97,7 +97,7 @@ Java_org_libgit2_jagged_core_NativeMethods_referenceResolve(
 
 	if ((error = git_reference_lookup(&symbolic, repo, refname)) < 0 ||
 		(error = git_reference_resolve(&resolved, symbolic)) < 0) {
-		git_java_exception_throw_from_giterr(env, error);
+		git_java_exception_throw_giterr(env, error);
 		goto done;
 	}
 

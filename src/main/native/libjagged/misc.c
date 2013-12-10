@@ -53,7 +53,7 @@ Java_org_libgit2_jagged_core_NativeMethods_setOptionMmapWindowSize(
 	GIT_UNUSED(class);
 
 	if ((error = git_libgit2_opts(GIT_OPT_SET_MWINDOW_SIZE, (size_t)size)) < 0)
-		git_java_exception_throw_from_giterr(env, error);
+		git_java_exception_throw_giterr(env, error);
 }
 
 JNIEXPORT jlong JNICALL
@@ -67,7 +67,7 @@ Java_org_libgit2_jagged_core_NativeMethods_getOptionMmapWindowSize(
 	GIT_UNUSED(class);
 
 	if ((error = git_libgit2_opts(GIT_OPT_GET_MWINDOW_SIZE, &size)) < 0)
-		git_java_exception_throw_from_giterr(env, error);
+		git_java_exception_throw_giterr(env, error);
 
 	return size;
 }
@@ -83,7 +83,7 @@ Java_org_libgit2_jagged_core_NativeMethods_setOptionMmapWindowMappedLimit(
 	GIT_UNUSED(class);
 
 	if ((error = git_libgit2_opts(GIT_OPT_SET_MWINDOW_MAPPED_LIMIT, (size_t)size)) < 0)
-		git_java_exception_throw_from_giterr(env, error);
+		git_java_exception_throw_giterr(env, error);
 }
 
 JNIEXPORT jlong JNICALL
@@ -97,7 +97,7 @@ Java_org_libgit2_jagged_core_NativeMethods_getOptionMmapWindowMappedLimit(
 	GIT_UNUSED(class);
 
 	if ((error = git_libgit2_opts(GIT_OPT_GET_MWINDOW_MAPPED_LIMIT, &size)) < 0)
-		git_java_exception_throw_from_giterr(env, error);
+		git_java_exception_throw_giterr(env, error);
 
 	return size;
 }
@@ -118,7 +118,7 @@ Java_org_libgit2_jagged_core_NativeMethods_getOptionSearchPath(
 		git_java_exception_throw(env, "search path too large");
 		return NULL;
 	} else if (error < 0) {
-		git_java_exception_throw_from_giterr(env, error);
+		git_java_exception_throw_giterr(env, error);
 		return NULL;
 	}
 
@@ -142,7 +142,7 @@ Java_org_libgit2_jagged_core_NativeMethods_setOptionSearchPath(
 		return;
 
 	if ((error = git_libgit2_opts(GIT_OPT_SET_SEARCH_PATH, level, path)) < 0)
-		git_java_exception_throw_from_giterr(env, error);
+		git_java_exception_throw_giterr(env, error);
 }
 
 JNIEXPORT void JNICALL
@@ -156,7 +156,7 @@ Java_org_libgit2_jagged_core_NativeMethods_setOptionEnableCaching(
 	GIT_UNUSED(class);
 
 	if ((error = git_libgit2_opts(GIT_OPT_ENABLE_CACHING, (int)enabled)) < 0)
-		git_java_exception_throw_from_giterr(env, error);
+		git_java_exception_throw_giterr(env, error);
 }
 
 JNIEXPORT void JNICALL
@@ -171,7 +171,7 @@ Java_org_libgit2_jagged_core_NativeMethods_setOptionCacheObjectLimit(
 	GIT_UNUSED(class);
 
 	if ((error = git_libgit2_opts(GIT_OPT_SET_CACHE_OBJECT_LIMIT, type, (size_t)size)) < 0)
-		git_java_exception_throw_from_giterr(env, error);
+		git_java_exception_throw_giterr(env, error);
 }
 
 JNIEXPORT void JNICALL
@@ -185,7 +185,7 @@ Java_org_libgit2_jagged_core_NativeMethods_setOptionCacheMaxSize(
 	GIT_UNUSED(class);
 
 	if ((error = git_libgit2_opts(GIT_OPT_SET_CACHE_MAX_SIZE, max)) < 0)
-		git_java_exception_throw_from_giterr(env, error);
+		git_java_exception_throw_giterr(env, error);
 }
 
 JNIEXPORT jobject JNICALL
@@ -201,7 +201,7 @@ Java_org_libgit2_jagged_core_NativeMethods_getOptionCachedStatistics(
 	GIT_UNUSED(class);
 
 	if ((error = git_libgit2_opts(GIT_OPT_GET_CACHED_MEMORY, &used, &max)) < 0)
-		git_java_exception_throw_from_giterr(env, error);
+		git_java_exception_throw_giterr(env, error);
 
 	if ((statistics_class = (*env)->FindClass(env, GIT_JAVA_CLASS_OPTION_CACHED_STATISTICS)) == NULL ||
 		(statistics_ctormethod = (*env)->GetMethodID(env, statistics_class, "<init>", "(JJ)V")) == NULL)

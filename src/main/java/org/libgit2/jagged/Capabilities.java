@@ -1,5 +1,6 @@
 package org.libgit2.jagged;
 
+import org.libgit2.jagged.core.Lazy;
 import org.libgit2.jagged.core.NativeMethods;
 
 public class Capabilities
@@ -13,20 +14,18 @@ public class Capabilities
     /* SSH is supported */
     public static final Capabilities SSH = new Capabilities(1 << 2);
 
-    private static Capabilities instance = null;
-    private final static Object instanceLock = new Object();
+    private static final Lazy<Capabilities> instance = new Lazy<Capabilities>()
+    {
+        @Override
+        protected Capabilities call()
+        {
+            return new Capabilities(NativeMethods.getCapabilities());
+        }
+    };
 
     public static Capabilities getInstance()
     {
-        synchronized (instanceLock)
-        {
-            if (instance == null)
-            {
-                instance = new Capabilities(NativeMethods.getCapabilities());
-            }
-
-            return instance;
-        }
+        return instance.getValue();
     }
 
     public static Capabilities combine(Capabilities... capabilities)

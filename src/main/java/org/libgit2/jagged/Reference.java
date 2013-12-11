@@ -15,7 +15,7 @@ public abstract class Reference
     private final Repository repository;
     private final String canonicalName;
 
-    protected Reference(final Repository repository, final String canonicalName)
+    private Reference(final Repository repository, final String canonicalName)
     {
         this.repository = repository;
         this.canonicalName = canonicalName;
@@ -70,16 +70,16 @@ public abstract class Reference
     public static class DirectReference
         extends Reference
     {
-        private final Oid target;
+        private final ObjectId target;
 
-        private DirectReference(final Repository repository, final String canonicalName, final Oid target)
+        private DirectReference(final Repository repository, final String canonicalName, final ObjectId target)
         {
             super(repository, canonicalName);
 
             this.target = target;
         }
 
-        public Oid getTarget()
+        public ObjectId getTarget()
         {
             return target;
         }

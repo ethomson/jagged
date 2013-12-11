@@ -1,5 +1,8 @@
 package org.libgit2.jagged.core;
 
+import org.libgit2.jagged.Commit;
+import org.libgit2.jagged.GitObject;
+import org.libgit2.jagged.ObjectId;
 import org.libgit2.jagged.Options;
 import org.libgit2.jagged.Reference;
 import org.libgit2.jagged.Reference.DirectReference;
@@ -15,14 +18,14 @@ public class NativeMethods
         NativeLoader.load("git2");
         NativeLoader.load("jagged");
 
-        threadsInit();
+        globalThreadsInit();
 
         finalizer = new Object()
         {
             @Override
             public void finalize()
             {
-                threadsShutdown();
+                globalThreadsShutdown();
             }
         };
     }
@@ -31,39 +34,47 @@ public class NativeMethods
      * Global state
      */
 
-    public static native GitError errorLast();
+    public static native GitError globalErrorLast();
 
-    public static native void threadsInit();
+    public static native void globalThreadsInit();
 
-    public static native void threadsShutdown();
+    public static native void globalThreadsShutdown();
+
+    public static native int globalGetCapabilities();
+
+    public static native Version globalGetLibGit2Version();
+
+    /*
+     * Objects
+     */
+
+    public static native <T extends GitObject> T objectLookup(Repository repository, ObjectId oid, int type);
+
+    public static native Commit.Metadata commitGetMetadata(Repository repository, Commit commit);
 
     /*
      * Options
      */
 
-    public static native int getCapabilities();
+    public static native void optionSetMmapWindowSize(long size);
 
-    public static native Version getLibGit2Version();
+    public static native long optionGetMmapWindowSize();
 
-    public static native void setOptionMmapWindowSize(long size);
+    public static native void optionSetMmapWindowMappedLimit(long limit);
 
-    public static native long getOptionMmapWindowSize();
+    public static native long optionGetMmapWindowMappedLimit();
 
-    public static native void setOptionMmapWindowMappedLimit(long limit);
+    public static native void optionSetSearchPath(int level, String path);
 
-    public static native long getOptionMmapWindowMappedLimit();
+    public static native String optionGetSearchPath(int level);
 
-    public static native void setOptionSearchPath(int level, String path);
+    public static native void optionSetEnableCaching(boolean enabled);
 
-    public static native String getOptionSearchPath(int level);
+    public static native void optionSetCacheObjectLimit(int type, long size);
 
-    public static native void setOptionEnableCaching(boolean enabled);
+    public static native void optionSetCacheMaxSize(long max);
 
-    public static native void setOptionCacheObjectLimit(int type, long size);
-
-    public static native void setOptionCacheMaxSize(long max);
-
-    public static native Options.CacheStatistics getOptionCachedStatistics();
+    public static native Options.CacheStatistics optionGetCachedStatistics();
 
     /*
      * Reference operations

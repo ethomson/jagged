@@ -133,7 +133,7 @@ git_java_utf8_array_to_jstring_array(
 GIT_INLINE(void *)
 git_java_ptr_from_jlong(jlong handle)
 {
-	void *ptr;
+	void *ptr = 0;
 
 	memcpy(&ptr, &handle, sizeof(void *));
 

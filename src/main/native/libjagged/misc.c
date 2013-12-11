@@ -8,42 +8,10 @@
 #include "reference.h"
 #include "oid.h"
 
-#define GIT_JAVA_CLASS_VERSION "org/libgit2/jagged/Version"
 #define GIT_JAVA_CLASS_OPTION_CACHED_STATISTICS "org/libgit2/jagged/Options$CacheStatistics"
 
-JNIEXPORT jint JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_getCapabilities(
-	JNIEnv *env,
-	jclass class)
-{
-	GIT_UNUSED(env);
-	GIT_UNUSED(class);
-
-	return git_libgit2_capabilities();
-}
-
-JNIEXPORT jobject JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_getLibGit2Version(
-	JNIEnv *env,
-	jclass class)
-{
-	jclass version_class;
-	jmethodID version_ctormethod;
-	int major, minor, revision;
-
-	GIT_UNUSED(class);
-
-	git_libgit2_version(&major, &minor, &revision);
-
-	if ((version_class = (*env)->FindClass(env, GIT_JAVA_CLASS_VERSION)) == NULL ||
-		(version_ctormethod = (*env)->GetMethodID(env, version_class, "<init>", "(III)V")) == NULL)
-		return NULL;
-
-	return (*env)->NewObject(env, version_class, version_ctormethod, major, minor, revision);
-}
-
 JNIEXPORT void JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_setOptionMmapWindowSize(
+Java_org_libgit2_jagged_core_NativeMethods_optionSetMmapWindowSize(
 	JNIEnv *env,
 	jclass class,
 	jlong size)
@@ -57,7 +25,7 @@ Java_org_libgit2_jagged_core_NativeMethods_setOptionMmapWindowSize(
 }
 
 JNIEXPORT jlong JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_getOptionMmapWindowSize(
+Java_org_libgit2_jagged_core_NativeMethods_optionGetMmapWindowSize(
 	JNIEnv *env,
 	jclass class)
 {
@@ -73,7 +41,7 @@ Java_org_libgit2_jagged_core_NativeMethods_getOptionMmapWindowSize(
 }
 
 JNIEXPORT void JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_setOptionMmapWindowMappedLimit(
+Java_org_libgit2_jagged_core_NativeMethods_optionSetMmapWindowMappedLimit(
 	JNIEnv *env,
 	jclass class,
 	jlong size)
@@ -87,7 +55,7 @@ Java_org_libgit2_jagged_core_NativeMethods_setOptionMmapWindowMappedLimit(
 }
 
 JNIEXPORT jlong JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_getOptionMmapWindowMappedLimit(
+Java_org_libgit2_jagged_core_NativeMethods_optionGetMmapWindowMappedLimit(
 	JNIEnv *env,
 	jclass class)
 {
@@ -103,7 +71,7 @@ Java_org_libgit2_jagged_core_NativeMethods_getOptionMmapWindowMappedLimit(
 }
 
 JNIEXPORT jstring JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_getOptionSearchPath(
+Java_org_libgit2_jagged_core_NativeMethods_optionGetSearchPath(
 	JNIEnv *env,
 	jclass class,
 	jint level)
@@ -126,7 +94,7 @@ Java_org_libgit2_jagged_core_NativeMethods_getOptionSearchPath(
 }
 
 JNIEXPORT void JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_setOptionSearchPath(
+Java_org_libgit2_jagged_core_NativeMethods_optionSetSearchPath(
 	JNIEnv *env,
 	jclass class,
 	jint level,
@@ -146,7 +114,7 @@ Java_org_libgit2_jagged_core_NativeMethods_setOptionSearchPath(
 }
 
 JNIEXPORT void JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_setOptionEnableCaching(
+Java_org_libgit2_jagged_core_NativeMethods_optionSetEnableCaching(
 	JNIEnv *env,
 	jclass class,
 	jboolean enabled)
@@ -160,7 +128,7 @@ Java_org_libgit2_jagged_core_NativeMethods_setOptionEnableCaching(
 }
 
 JNIEXPORT void JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_setOptionCacheObjectLimit(
+Java_org_libgit2_jagged_core_NativeMethods_optionSetCacheObjectLimit(
 	JNIEnv *env,
 	jclass class,
 	jint type,
@@ -175,7 +143,7 @@ Java_org_libgit2_jagged_core_NativeMethods_setOptionCacheObjectLimit(
 }
 
 JNIEXPORT void JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_setOptionCacheMaxSize(
+Java_org_libgit2_jagged_core_NativeMethods_optionSetCacheMaxSize(
 	JNIEnv *env,
 	jclass class,
 	jlong max)
@@ -189,7 +157,7 @@ Java_org_libgit2_jagged_core_NativeMethods_setOptionCacheMaxSize(
 }
 
 JNIEXPORT jobject JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_getOptionCachedStatistics(
+Java_org_libgit2_jagged_core_NativeMethods_optionGetCachedStatistics(
 	JNIEnv *env,
 	jclass class)
 {

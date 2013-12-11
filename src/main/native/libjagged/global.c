@@ -6,8 +6,10 @@
 
 #include "util.h"
 
+#define GIT_JAVA_CLASS_VERSION "org/libgit2/jagged/Version"
+
 JNIEXPORT jobject JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_errorLast(
+Java_org_libgit2_jagged_core_NativeMethods_globalErrorLast(
 	JNIEnv *env,
 	jclass class)
 {
@@ -46,7 +48,7 @@ Java_org_libgit2_jagged_core_NativeMethods_errorLast(
 }
 
 JNIEXPORT void JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_threadsInit(
+Java_org_libgit2_jagged_core_NativeMethods_globalThreadsInit(
 	JNIEnv *env,
 	jclass class)
 {
@@ -57,7 +59,7 @@ Java_org_libgit2_jagged_core_NativeMethods_threadsInit(
 }
 
 JNIEXPORT void JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_threadsShutdown(
+Java_org_libgit2_jagged_core_NativeMethods_globalThreadsShutdown(
 	JNIEnv *env,
 	jclass class)
 {
@@ -65,5 +67,36 @@ Java_org_libgit2_jagged_core_NativeMethods_threadsShutdown(
 	GIT_UNUSED(class);
 
 	git_threads_shutdown();
+}
+
+JNIEXPORT jint JNICALL
+Java_org_libgit2_jagged_core_NativeMethods_globalGetCapabilities(
+	JNIEnv *env,
+	jclass class)
+{
+	GIT_UNUSED(env);
+	GIT_UNUSED(class);
+
+	return git_libgit2_capabilities();
+}
+
+JNIEXPORT jobject JNICALL
+Java_org_libgit2_jagged_core_NativeMethods_globalGetLibGit2Version(
+	JNIEnv *env,
+	jclass class)
+{
+	jclass version_class;
+	jmethodID version_ctormethod;
+	int major, minor, revision;
+
+	GIT_UNUSED(class);
+
+	git_libgit2_version(&major, &minor, &revision);
+
+	if ((version_class = (*env)->FindClass(env, GIT_JAVA_CLASS_VERSION)) == NULL ||
+		(version_ctormethod = (*env)->GetMethodID(env, version_class, "<init>", "(III)V")) == NULL)
+		return NULL;
+
+	return (*env)->NewObject(env, version_class, version_ctormethod, major, minor, revision);
 }
 

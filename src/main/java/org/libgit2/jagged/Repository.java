@@ -116,6 +116,18 @@ public class Repository
         return references;
     }
 
+    public <T extends GitObject> T lookup(ObjectId id)
+    {
+        return lookup(id, ObjectType.ANY);
+    }
+
+    public <T extends GitObject> T lookup(ObjectId id, ObjectType type)
+    {
+        Ensure.argumentNotNull(id, "id");
+
+        return NativeMethods.objectLookup(this, id, type.getValue());
+    }
+
     /**
      * Gets the branch of this repository pointed to by {@code HEAD}.
      * 

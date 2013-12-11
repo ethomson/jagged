@@ -1,5 +1,6 @@
 package org.libgit2.jagged.core;
 
+import org.libgit2.jagged.Commit;
 import org.libgit2.jagged.GitObject;
 import org.libgit2.jagged.ObjectId;
 import org.libgit2.jagged.Options;
@@ -48,6 +49,8 @@ public class NativeMethods
      */
 
     public static native <T extends GitObject> T objectLookup(Repository repository, ObjectId oid, int type);
+
+    public static native Commit.Metadata commitGetMetadata(Repository repository, Commit commit);
 
     /*
      * Options

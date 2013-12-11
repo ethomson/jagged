@@ -1,6 +1,8 @@
 #ifndef GIT_JAVA_OID_H
 #define GIT_JAVA_OID_H
 
+#include <string.h>
+
 #include <jni.h>
 
 #define GIT_JAVA_CLASS_OID "org/libgit2/jagged/ObjectId"

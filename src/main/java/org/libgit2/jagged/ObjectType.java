@@ -1,36 +1,40 @@
 package org.libgit2.jagged;
 
+import java.text.MessageFormat;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
 public enum ObjectType
 {
-    /* An object of any type */
+    /**
+     * An object of any type. Used only for querying by type; an object will
+     * never have this type set.
+     */
     ANY(-2),
 
-    /* An invalid object */
+    /** An invalid object */
     INVALID(-1),
 
-    /* A commit */
+    /** A commit */
     COMMIT(1),
 
-    /* A tree */
+    /** A tree */
     TREE(2),
 
-    /* A blob */
+    /** A blob */
     BLOB(3),
 
-    /* A tag */
+    /** A tag */
     TAG(4),
 
-    /*
+    /**
      * In a pack file, this object is defined as a delta from another object
      * identified by its offset into the pack file.
      */
     OFFSET_DELTA(6),
 
-    /*
+    /**
      * In a pack file, this object is defined as a delta from another object
      * identified by its ID.
      */
@@ -58,9 +62,15 @@ public enum ObjectType
         return value;
     }
 
-    static ObjectType getType(int value)
+    static ObjectType valueOf(int value)
     {
         ObjectType type = types.get(value);
-        return type != null ? type : INVALID;
+
+        if (type == null)
+        {
+            throw new IllegalArgumentException(MessageFormat.format("Unknown type: {0}", value));
+        }
+
+        return type;
     }
 }

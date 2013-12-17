@@ -52,7 +52,7 @@ public class NativeMethods
 
     public static native <T extends GitObject> T objectLookup(Repository repository, ObjectId oid, int type);
 
-    public static native Commit.Metadata commitGetMetadata(Repository repository, Commit commit);
+    public static native CommitMetadata commitGetMetadata(Repository repository, Commit commit);
 
     public static native Commit[] commitGetParents(Repository repository, Commit commit);
 

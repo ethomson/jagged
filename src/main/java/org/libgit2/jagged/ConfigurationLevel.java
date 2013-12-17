@@ -1,5 +1,9 @@
 package org.libgit2.jagged;
 
+/**
+ * A scope for a group of Git configuration settings, ranging from the local
+ * repository to the entire system.
+ */
 public enum ConfigurationLevel
 {
     /** The system-wide configuration */

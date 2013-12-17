@@ -5,9 +5,12 @@ import java.util.Iterator;
 import org.libgit2.jagged.core.Lazy;
 import org.libgit2.jagged.core.NativeMethods;
 
+/**
+ * A tree represents a folder in a git repository, containing files and
+ * subtrees.
+ */
 public class Tree
     extends GitObject
-    implements Iterable<TreeEntry>
 {
     private final Lazy<Long> entryCount = new Lazy<Long>()
     {
@@ -23,17 +26,33 @@ public class Tree
         super(repo, id);
     }
 
+    /**
+     * Returns the number of entries in this tree.
+     * 
+     * @return The number of entries in this tree.
+     */
     public long getEntryCount()
     {
         return entryCount.getValue().longValue();
     }
 
-    public Iterator<TreeEntry> iterator()
+    /**
+     * Returns the entries in this tree.
+     * 
+     * @return An {@code Iterable} for the {@link TreeEntry} objects.
+     */
+    public Iterable<TreeEntry> getEntries()
     {
-        return new TreeEntryIterator();
+        return new Iterable<TreeEntry>()
+        {
+            public Iterator<TreeEntry> iterator()
+            {
+                return new TreeEntryIterator();
+            }
+        };
     }
 
-    public class TreeEntryIterator
+    private class TreeEntryIterator
         implements Iterator<TreeEntry>
     {
         long index = 0;

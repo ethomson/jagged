@@ -6,12 +6,10 @@ import java.util.Map;
 
 public enum Mode
 {
-    INVALID(0),
-
-    /* A normal file */
+    /** A normal file */
     FILE(0100644),
 
-    /* A file with the executable bit set */
+    /** A file with the executable bit set */
     EXECUTABLE_FILE(0100755);
 
     private final int value;
@@ -31,14 +29,20 @@ public enum Mode
         this.value = value;
     }
 
-    int getValue()
+    public int getValue()
     {
         return value;
     }
 
-    static Mode getMode(int value)
+    public static Mode valueOf(int value)
     {
         Mode mode = modes.get(value);
-        return mode != null ? mode : INVALID;
+
+        if (mode == null)
+        {
+            throw new IllegalArgumentException("Invalid mode");
+        }
+
+        return mode;
     }
 }

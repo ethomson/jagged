@@ -34,7 +34,13 @@ public class Repository
     }
 
     /**
-     * @equivalence init(path, false)
+     * Create a new on-disk git repository. The returned Repository must be
+     * {@link #dispose()}d.
+     * 
+     * @param path
+     *        the path to the new git repository (for bare repositories) or
+     *        working directory (for non-bare)
+     * @return the new Repository
      */
     public static Repository init(final String path)
     {
@@ -48,6 +54,9 @@ public class Repository
      * @param path
      *        the path to the new git repository (for bare repositories) or
      *        working directory (for non-bare)
+     * @param bare
+     *        {@code true} if the new repository should be a "bare" repository
+     *        (lacking a working directory), {@code false} otherwise
      * @return the new Repository
      */
     public static Repository init(final String path, boolean bare)
@@ -116,14 +125,31 @@ public class Repository
         return references;
     }
 
+    /**
+     * Looks up and returns the given object from the repository by id.
+     * 
+     * @param id
+     *        the object id to query (not {@code null})
+     * @return the git object
+     */
     public <T extends GitObject> T lookup(ObjectId id)
     {
         return lookup(id, ObjectType.ANY);
     }
 
+    /**
+     * Looks up and returns the given object from the repository by id.
+     * 
+     * @param id
+     *        the object id to query (not {@code null})
+     * @param type
+     *        the type of object to query (not {@code null})
+     * @return the git object
+     */
     public <T extends GitObject> T lookup(ObjectId id, ObjectType type)
     {
         Ensure.argumentNotNull(id, "id");
+        Ensure.argumentNotNull(type, "type");
 
         return NativeMethods.objectLookup(this, id, type.getValue());
     }

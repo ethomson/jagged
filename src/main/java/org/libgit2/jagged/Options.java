@@ -3,8 +3,14 @@ package org.libgit2.jagged;
 import org.libgit2.jagged.core.Ensure;
 import org.libgit2.jagged.core.NativeMethods;
 
-public class Options
+/**
+ * Configurable options for libgit2.
+ */
+public final class Options
 {
+    /**
+     * The current statistics for the object cache.
+     */
     public static class CacheStatistics
     {
         private final long used;
@@ -16,15 +22,29 @@ public class Options
             this.maximum = maximum;
         }
 
+        /**
+         * The amount of memory currently used by the cache.
+         * 
+         * @return Cache usage (in bytes)
+         */
         public long getUsed()
         {
             return used;
         }
 
+        /**
+         * The maximum amount of memory available to the cache.
+         * 
+         * @return Cache permitted usage (in bytes)
+         */
         public long getMaximum()
         {
             return maximum;
         }
+    }
+
+    private Options()
+    {
     }
 
     /**
@@ -53,7 +73,7 @@ public class Options
     /**
      * Sets the maximum amount of memory that can be mapped by the library.
      * 
-     * @param size
+     * @param limit
      *        the memory limit
      */
     public static void setMmapWindowMappedLimit(long limit)

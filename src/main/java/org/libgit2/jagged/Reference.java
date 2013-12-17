@@ -8,8 +8,22 @@ import org.libgit2.jagged.core.NativeMethods;
  */
 public abstract class Reference
 {
+    /**
+     * Namespace prefix indicating that the given reference is a branch (
+     * {@code refs/heads/}).
+     */
     public static final String PREFIX_BRANCH = "refs/heads/";
+
+    /**
+     * Namespace prefix indicating that the given reference is a tag (
+     * {@code refs/tags/}).
+     */
     public static final String PREFIX_TAG = "refs/tags/";
+
+    /**
+     * Namespace prefix indicating that the given reference is a remote-tracking
+     * branch ({@code refs/remotes/}).
+     */
     public static final String PREFIX_REMOTE_TRACKING = "refs/remotes/";
 
     private final Repository repository;
@@ -38,8 +52,7 @@ public abstract class Reference
 
     /**
      * Resolves ("peels") a reference by following the targets of symbolic
-     * references until a {@link DirectReference} is found, returning that. The
-     * resultant Reference must be {@link #dispose()}d.
+     * references until a {@link DirectReference} is found, returning that.
      * 
      * @return the resolved {@link DirectReference}
      */

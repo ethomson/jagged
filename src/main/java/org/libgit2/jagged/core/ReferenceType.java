@@ -1,5 +1,6 @@
 package org.libgit2.jagged.core;
 
+import java.text.MessageFormat;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,9 +56,15 @@ public enum ReferenceType
      * @return a {@link ReferenceType} or {@link ReferenceType#INVALID} if the
      *         reference type was invalid
      */
-    static ReferenceType getReferenceType(int value)
+    static ReferenceType valueOf(int value)
     {
         ReferenceType referenceType = referenceTypes.get(value);
-        return referenceType != null ? referenceType : INVALID;
+
+        if (referenceType == null)
+        {
+            throw new IllegalArgumentException(MessageFormat.format("Unknown reference type: {0}", value));
+        }
+
+        return referenceType;
     }
 }

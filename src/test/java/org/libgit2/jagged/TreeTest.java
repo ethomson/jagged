@@ -47,7 +47,7 @@ public class TreeTest
         ObjectId oid = new ObjectId("e77ab1c63f3fbde9c5ef9972939aa0717012d7c0");
         Tree tree = repository.lookup(oid);
 
-        Iterator<TreeEntry> iterator = tree.iterator();
+        Iterator<TreeEntry> iterator = tree.getEntries().iterator();
 
         TreeEntry entry = iterator.next();
 

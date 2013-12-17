@@ -3,16 +3,20 @@ package org.libgit2.jagged;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.libgit2.jagged.core.CommitMetadata;
 import org.libgit2.jagged.core.Lazy;
 import org.libgit2.jagged.core.NativeMethods;
 
+/**
+ * Representation of a git commit object.
+ */
 public class Commit
     extends GitObject
 {
-    private final Lazy<Metadata> metadata = new Lazy<Metadata>()
+    private final Lazy<CommitMetadata> metadata = new Lazy<CommitMetadata>()
     {
         @Override
-        protected Metadata call()
+        protected CommitMetadata call()
         {
             return NativeMethods.commitGetMetadata(Commit.this.getRepository(), Commit.this);
         }
@@ -41,45 +45,46 @@ public class Commit
         super(repo, id);
     }
 
+    /**
+     * The committer of a git commit, the person who injected this commit into
+     * the repository.
+     * 
+     * @return The committer
+     */
     public Signature getCommitter()
     {
         return metadata.getValue().getCommitter();
     }
 
+    /**
+     * The author of a git commit, the person responsible for crafting the
+     * commit itself.
+     * 
+     * @return The author
+     */
     public Signature getAuthor()
     {
         return metadata.getValue().getAuthor();
     }
 
-    public Collection<Commit> getParents()
+    /**
+     * The parents of this git commit.
+     * 
+     * @return The parent {@link Commit}s of this commit.
+     */
+    public Iterable<Commit> getParents()
     {
         return parents.getValue();
     }
 
+    /**
+     * The tree for this git commit. This points to the root of the repository
+     * at this commit.
+     * 
+     * @return The {@link Tree} for this commit.
+     */
     public Tree getTree()
     {
         return tree.getValue();
-    }
-
-    public static class Metadata
-    {
-        private final Signature committer;
-        private final Signature author;
-
-        public Metadata(Signature committer, Signature author)
-        {
-            this.committer = committer;
-            this.author = author;
-        }
-
-        public Signature getCommitter()
-        {
-            return committer;
-        }
-
-        public Signature getAuthor()
-        {
-            return author;
-        }
     }
 }

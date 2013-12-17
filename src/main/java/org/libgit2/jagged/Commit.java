@@ -27,6 +27,15 @@ public class Commit
         }
     };
 
+    private final Lazy<Tree> tree = new Lazy<Tree>()
+    {
+        @Override
+        protected Tree call()
+        {
+            return NativeMethods.commitGetTree(Commit.this.getRepository(), Commit.this);
+        }
+    };
+
     private Commit(Repository repo, ObjectId id)
     {
         super(repo, id);
@@ -45,6 +54,11 @@ public class Commit
     public Collection<Commit> getParents()
     {
         return parents.getValue();
+    }
+
+    public Tree getTree()
+    {
+        return tree.getValue();
     }
 
     public static class Metadata

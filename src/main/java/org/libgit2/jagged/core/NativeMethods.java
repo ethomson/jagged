@@ -7,6 +7,8 @@ import org.libgit2.jagged.Options;
 import org.libgit2.jagged.Reference;
 import org.libgit2.jagged.Reference.DirectReference;
 import org.libgit2.jagged.Repository;
+import org.libgit2.jagged.Tree;
+import org.libgit2.jagged.TreeEntry;
 import org.libgit2.jagged.Version;
 
 public class NativeMethods
@@ -53,6 +55,12 @@ public class NativeMethods
     public static native Commit.Metadata commitGetMetadata(Repository repository, Commit commit);
 
     public static native Commit[] commitGetParents(Repository repository, Commit commit);
+
+    public static native Tree commitGetTree(Repository repository, Commit commit);
+
+    public static native TreeEntry treeGetEntry(Repository repository, Tree tree, long entryIndex);
+
+    public static native long treeGetEntryCount(Repository repository, Tree tree);
 
     /*
      * Options

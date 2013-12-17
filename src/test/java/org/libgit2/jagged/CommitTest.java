@@ -72,4 +72,20 @@ public class CommitTest
 
         repository.dispose();
     }
+
+    @Test
+    public void testGetTree()
+    {
+        final File repoPath = setupRepository("testrepo");
+        Repository repository = new Repository(repoPath.getAbsolutePath());
+
+        ObjectId oid = new ObjectId("055fe18dd1aef07991ebd08b4d54fc761dd022fb");
+        Commit commit = repository.lookup(oid);
+
+        Tree tree = repository.lookup(new ObjectId("e77ab1c63f3fbde9c5ef9972939aa0717012d7c0"));
+
+        Assert.assertEquals(tree, commit.getTree());
+
+        repository.dispose();
+    }
 }

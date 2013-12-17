@@ -1,5 +1,9 @@
 package org.libgit2.jagged;
 
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+
 public enum ObjectType
 {
     /* An object of any type */
@@ -34,6 +38,16 @@ public enum ObjectType
 
     private final int value;
 
+    private static final Map<Integer, ObjectType> types = new HashMap<Integer, ObjectType>();
+
+    static
+    {
+        for (ObjectType type : EnumSet.allOf(ObjectType.class))
+        {
+            types.put(type.getValue(), type);
+        }
+    }
+
     private ObjectType(int value)
     {
         this.value = value;
@@ -42,5 +56,11 @@ public enum ObjectType
     int getValue()
     {
         return value;
+    }
+
+    static ObjectType getType(int value)
+    {
+        ObjectType type = types.get(value);
+        return type != null ? type : INVALID;
     }
 }

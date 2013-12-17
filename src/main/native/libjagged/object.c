@@ -273,7 +273,7 @@ Java_org_libgit2_jagged_core_NativeMethods_treeGetEntry(
 		goto done;
 
 	if ((tree_entry = git_tree_entry_byindex(tree, (size_t)entry_idx)) == NULL) {
-		git_java_exception_throw(env, "Could not locate tree entry %d", entry_idx);
+		git_java_exception_throw(env, "Could not locate tree entry %ld", entry_idx);
 		goto done;
 	}
 

@@ -4,6 +4,9 @@ import java.util.Arrays;
 
 import org.libgit2.jagged.core.Ensure;
 
+/**
+ * The SHA-1 hash comprising the ID for a git object.
+ */
 public final class ObjectId
 {
     public final static int SIZE = 20;
@@ -12,6 +15,12 @@ public final class ObjectId
     private final byte[] oid;
     private final String hex;
 
+    /**
+     * Creates an object id from the given string representation of the ID.
+     * 
+     * @param hex
+     *        The string representation of the ID
+     */
     public ObjectId(String hex)
     {
         Ensure.argumentNotNull(hex, "hex");
@@ -21,6 +30,12 @@ public final class ObjectId
         this.hex = hex.toLowerCase();
     }
 
+    /**
+     * Creates an object id from the given byte representation of the ID.
+     * 
+     * @param oid
+     *        The byte representation of the ID.
+     */
     public ObjectId(byte[] oid)
     {
         Ensure.argumentNotNull(oid, "oid");
@@ -78,11 +93,21 @@ public final class ObjectId
         return str.toString();
     }
 
+    /**
+     * Gets the byte representation of the object ID.
+     * 
+     * @return The byte representation
+     */
     public byte[] getOid()
     {
         return oid;
     }
 
+    /**
+     * Gets the string representation of the object ID.
+     * 
+     * @return The string representation
+     */
     @Override
     public String toString()
     {

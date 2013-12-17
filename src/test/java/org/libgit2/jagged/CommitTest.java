@@ -1,6 +1,7 @@
 package org.libgit2.jagged;
 
 import java.io.File;
+import java.util.Iterator;
 
 import junit.framework.Assert;
 
@@ -62,13 +63,15 @@ public class CommitTest
         ObjectId parentOid = new ObjectId("055fe18dd1aef07991ebd08b4d54fc761dd022fb");
         Commit parent = repository.lookup(parentOid);
 
-        Assert.assertEquals(0, parent.getParents().size());
+        Assert.assertEquals(false, parent.getParents().iterator().hasNext());
 
         ObjectId childOid = new ObjectId("5eab02d63a3676df528bcd878ac935ec0c4d5bdc");
         Commit child = repository.lookup(childOid);
 
-        Assert.assertEquals(1, child.getParents().size());
-        Assert.assertEquals(parent, child.getParents().iterator().next());
+        Iterator<Commit> parents = child.getParents().iterator();
+
+        Assert.assertEquals(parent, parents.next());
+        Assert.assertEquals(false, parents.hasNext());
 
         repository.dispose();
     }

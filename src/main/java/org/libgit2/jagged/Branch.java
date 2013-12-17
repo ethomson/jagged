@@ -5,6 +5,10 @@ import java.text.MessageFormat;
 import org.libgit2.jagged.core.GitException;
 import org.libgit2.jagged.core.HashCode;
 
+/**
+ * A representation of a git branch, a reference in the {@code refs/heads}
+ * namespace.
+ */
 public class Branch
 {
     private final Repository repository;
@@ -18,11 +22,23 @@ public class Branch
         this.reference = reference;
     }
 
+    /**
+     * Gets the canonical branch name, including the leading namespace, eg
+     * {@code refs/heads/master}.
+     * 
+     * @return The canonical branch name
+     */
     public String getCanonicalName()
     {
         return reference.getCanonicalName();
     }
 
+    /**
+     * Gets the branch name, the reference name without the namespace, eg
+     * {@code master}.
+     * 
+     * @return The branch name
+     */
     public String getName()
     {
         if (name == null)
@@ -45,6 +61,13 @@ public class Branch
         return name;
     }
 
+    /**
+     * Queries whether this branch is the current repository head, that is
+     * whether the special {@code HEAD} reference points to this branch or not.
+     * 
+     * @return {@code true} if this is the repository head, {@code false}
+     *         otherwise.
+     */
     public boolean isCurrentRepositoryHead()
     {
         return this.equals(repository.getHead());

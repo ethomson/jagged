@@ -115,7 +115,7 @@ Java_org_libgit2_jagged_core_NativeMethods_commitGetMetadata(
 
 	if ((signature_class = (*env)->FindClass(env, "org/libgit2/jagged/Signature")) == NULL ||
 		(signature_initmethod = (*env)->GetMethodID(env, signature_class, "<init>", "(Ljava/lang/String;Ljava/lang/String;)V")) == NULL ||
-		(metadata_class = (*env)->FindClass(env, "org/libgit2/jagged/Commit$Metadata")) == NULL ||
+		(metadata_class = (*env)->FindClass(env, "org/libgit2/jagged/core/CommitMetadata")) == NULL ||
 		(metadata_initmethod = (*env)->GetMethodID(env, metadata_class, "<init>", "(Lorg/libgit2/jagged/Signature;Lorg/libgit2/jagged/Signature;)V")) == NULL ||
 		(commit = (git_commit *)git_java_object_native(env, repo_java, commit_java, GIT_OBJ_COMMIT)) == NULL)
 		goto done;
@@ -272,7 +272,7 @@ Java_org_libgit2_jagged_core_NativeMethods_treeGetEntry(
 		(tree = (git_tree *)git_java_object_native(env, repo_java, tree_java, GIT_OBJ_TREE)) == NULL)
 		goto done;
 
-	if ((tree_entry = git_tree_entry_byindex(tree, entry_idx)) == NULL) {
+	if ((tree_entry = git_tree_entry_byindex(tree, (size_t)entry_idx)) == NULL) {
 		git_java_exception_throw(env, "Could not locate tree entry %d", entry_idx);
 		goto done;
 	}

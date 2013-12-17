@@ -1,5 +1,8 @@
 package org.libgit2.jagged;
 
+/**
+ * Base class for git objects (commits, trees, blobs, etc.)
+ */
 public abstract class GitObject
 {
     private final Repository repository;
@@ -11,11 +14,21 @@ public abstract class GitObject
         this.id = id;
     }
 
+    /**
+     * The repository that this object belongs to.
+     * 
+     * @return The {@link Repository}
+     */
     public final Repository getRepository()
     {
         return repository;
     }
 
+    /**
+     * The object ID of this object, a/k/a the "hash" or the "sha1".
+     * 
+     * @return The {@link ObjectId} of this object.
+     */
     public final ObjectId getId()
     {
         return id;

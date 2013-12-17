@@ -2,6 +2,9 @@ package org.libgit2.jagged;
 
 import org.libgit2.jagged.core.HashCode;
 
+/**
+ * A tree entry represents a file or folder in a tree.
+ */
 public class TreeEntry
 {
     private final String name;
@@ -13,25 +16,45 @@ public class TreeEntry
     {
         this.name = name;
         this.id = id;
-        this.type = ObjectType.getType(type);
-        this.mode = Mode.getMode(mode);
+        this.type = ObjectType.valueOf(type);
+        this.mode = Mode.valueOf(mode);
     }
 
+    /**
+     * The name of a tree entry is where the entry will be checked out.
+     * 
+     * @return The name of the entry.
+     */
     public String getName()
     {
         return name;
     }
 
+    /**
+     * The object in this tree.
+     * 
+     * @return The object ID of the entry.
+     */
     public ObjectId getId()
     {
         return id;
     }
 
+    /**
+     * The type of tree entry.
+     * 
+     * @return The tree entry type
+     */
     public ObjectType getType()
     {
         return type;
     }
 
+    /**
+     * The mode of the tree entry
+     * 
+     * @return The file mode
+     */
     public Mode getMode()
     {
         return mode;

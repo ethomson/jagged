@@ -3,7 +3,10 @@
 jagged provides Java language bindings to [libgit2][0], a native Git
 implementation.
 
+See the javadoc at [http://ethomson.github.io/jagged][1].
+
 [0]: https://github.com/libgit2/libgit2
+[1]: http://ethomson.github.io/jagged
 
 ## What is this madness?
 
@@ -11,9 +14,9 @@ This is very experimental, very mediocre JNI bindings for libgit2.
 Almost nothing is bound, short of ensuring that this crazy idea might
 work.  It turns out that it might.
 
-You probably actually want to be using [jgit][1].
+You probably actually want to be using [jgit][2].
 
-[1]: http://www.jgit.org
+[2]: http://www.jgit.org
 
 ## How do I work with this?
 

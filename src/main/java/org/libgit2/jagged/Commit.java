@@ -40,7 +40,7 @@ public class Commit
         }
     };
 
-    private Commit(Repository repo, ObjectId id)
+    Commit(Repository repo, ObjectId id)
     {
         super(repo, id);
     }

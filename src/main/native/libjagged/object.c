@@ -10,6 +10,7 @@
 
 #define GIT_JAVA_CLASS_COMMIT "org/libgit2/jagged/Commit"
 #define GIT_JAVA_CLASS_TREE "org/libgit2/jagged/Tree"
+#define GIT_JAVA_CLASS_BLOB "org/libgit2/jagged/Blob"
 
 static git_object *git_java_object_native(JNIEnv *env, jobject repo_java, jobject object_java, jint type)
 {
@@ -49,6 +50,9 @@ GIT_INLINE(jobject) git_java_object_init(JNIEnv *env, jobject repo_java, jobject
 		break;
 	case GIT_OBJ_TREE:
 		object_classname = GIT_JAVA_CLASS_TREE;
+		break;
+	case GIT_OBJ_BLOB:
+		object_classname = GIT_JAVA_CLASS_BLOB;
 		break;
 	default:
 		git_java_exception_throw(env, "unknown object type: %d", type);
@@ -95,6 +99,77 @@ Java_org_libgit2_jagged_core_NativeMethods_objectLookup(
 done:
 	git_object_free(object);
 	return object_java;
+}
+
+JNIEXPORT void JNICALL
+Java_org_libgit2_jagged_core_NativeMethods_blobCloseContentStream(
+	JNIEnv *env,
+	jclass class,
+	jobject blobcontentstream_java)
+{
+	git_blob *blob;
+
+	GIT_UNUSED(env);
+	GIT_UNUSED(class);
+
+	blob = git_java_handle_get(env, blobcontentstream_java);
+
+	git_blob_free(blob);
+}
+
+JNIEXPORT jobject JNICALL
+Java_org_libgit2_jagged_core_NativeMethods_blobGetRawContentStream(
+	JNIEnv *env,
+	jclass class,
+	jobject repo_java,
+	jobject blob_java)
+{
+	jclass stream_class;
+	jmethodID stream_initmethod;
+	jobject bytebuffer_java;
+	git_blob *blob = NULL;
+
+	GIT_UNUSED(class);
+
+	if ((stream_class = (*env)->FindClass(env, "org/libgit2/jagged/core/BlobContentStream")) == NULL ||
+		(stream_initmethod = (*env)->GetMethodID(env, stream_class, "<init>", "(JLjava/nio/ByteBuffer;)V")) == NULL ||
+		(blob = (git_blob *)git_java_object_native(env, repo_java, blob_java, GIT_OBJ_BLOB)) == NULL ||
+		(bytebuffer_java = (*env)->NewDirectByteBuffer(env, (void *)git_blob_rawcontent(blob), git_blob_rawsize(blob))) == NULL)
+		return NULL;
+
+    return (*env)->NewObject(env, stream_class, stream_initmethod, git_java_jlong_from_ptr(blob), bytebuffer_java);
+}
+
+JNIEXPORT jobject JNICALL
+Java_org_libgit2_jagged_core_NativeMethods_blobGetMetadata(
+	JNIEnv *env,
+	jclass class,
+	jobject repo_java,
+	jobject blob_java)
+{
+	jclass metadata_class;
+	jmethodID metadata_initmethod;
+	jobject metadata_java = NULL;
+	git_blob *blob = NULL;
+	git_off_t size;
+	int binary;
+
+	GIT_UNUSED(class);
+
+	if ((metadata_class = (*env)->FindClass(env, "org/libgit2/jagged/core/BlobMetadata")) == NULL ||
+		(metadata_initmethod = (*env)->GetMethodID(env, metadata_class, "<init>", "(JZ)V")) == NULL ||
+		(blob = (git_blob *)git_java_object_native(env, repo_java, blob_java, GIT_OBJ_BLOB)) == NULL)
+		goto done;
+
+	size = git_blob_rawsize(blob);
+	binary = git_blob_is_binary(blob);
+
+	metadata_java = (*env)->NewObject(env, metadata_class, metadata_initmethod, (jlong)size, binary ? JNI_TRUE : JNI_FALSE);
+
+done:
+	git_blob_free(blob);
+
+	return metadata_java;
 }
 
 JNIEXPORT jobject JNICALL
@@ -246,30 +321,75 @@ done:
 	return (jlong)entrycount;
 }
 
+GIT_INLINE(jobject) git_java_tree_entry_init(JNIEnv *env, jobject repo_java, const git_tree_entry *tree_entry)
+{
+	jclass tree_entry_class;
+	jmethodID tree_entry_initmethod;
+	jstring name_java;
+	jobject oid_java;
+	git_otype type;
+	git_filemode_t mode;
+
+	if ((tree_entry_class = (*env)->FindClass(env, "org/libgit2/jagged/TreeEntry")) == NULL ||
+		(tree_entry_initmethod = (*env)->GetMethodID(env, tree_entry_class, "<init>", "(Lorg/libgit2/jagged/Repository;Ljava/lang/String;Lorg/libgit2/jagged/ObjectId;II)V")) == NULL ||
+		(name_java = git_java_utf8_to_jstring(env, git_tree_entry_name(tree_entry))) == NULL ||
+		(oid_java = git_java_objectid_init(env, git_tree_entry_id(tree_entry))) == NULL)
+		return NULL;
+
+	type = git_tree_entry_type(tree_entry);
+	mode = git_tree_entry_filemode(tree_entry);
+
+	return (*env)->NewObject(env, tree_entry_class, tree_entry_initmethod, repo_java, name_java, oid_java, type, mode);
+}
+
 JNIEXPORT jobject JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_treeGetEntry(
+Java_org_libgit2_jagged_core_NativeMethods_treeGetEntryByName(
+	JNIEnv *env,
+	jclass class,
+	jobject repo_java,
+	jobject tree_java,
+	jstring name_java)
+{
+	jobject tree_entry_java = NULL;
+	const char *name = NULL;
+	git_tree *tree = NULL;
+	const git_tree_entry *tree_entry;
+
+	GIT_UNUSED(class);
+
+	if ((tree = (git_tree *)git_java_object_native(env, repo_java, tree_java, GIT_OBJ_TREE)) == NULL ||
+		(name = git_java_jstring_to_utf8(env, name_java)) == NULL)
+		goto done;
+
+	if ((tree_entry = git_tree_entry_byname(tree, name)) == NULL)
+		goto done;
+
+	tree_entry_java = git_java_tree_entry_init(env, repo_java, tree_entry);
+
+done:
+	git_tree_free(tree);
+	git_java_utf8_free(env, name_java, name);
+
+	return tree_entry_java;
+}
+
+JNIEXPORT jobject JNICALL
+Java_org_libgit2_jagged_core_NativeMethods_treeGetEntryByIndex(
 	JNIEnv *env,
 	jclass class,
 	jobject repo_java,
 	jobject tree_java,
 	jlong entry_idx)
 {
-	jclass tree_entry_class;
-	jmethodID tree_entry_initmethod;
-	jobject oid_java, tree_entry_java = NULL;
-	jstring name_java;
+	jobject tree_entry_java = NULL;
 	git_tree *tree = NULL;
 	const git_tree_entry *tree_entry;
-	git_otype type;
-	git_filemode_t mode;
 
 	assert(entry_idx >= 0);
 
 	GIT_UNUSED(class);
 
-	if ((tree_entry_class = (*env)->FindClass(env, "org/libgit2/jagged/TreeEntry")) == NULL ||
-		(tree_entry_initmethod = (*env)->GetMethodID(env, tree_entry_class, "<init>", "(Ljava/lang/String;Lorg/libgit2/jagged/ObjectId;II)V")) == NULL ||
-		(tree = (git_tree *)git_java_object_native(env, repo_java, tree_java, GIT_OBJ_TREE)) == NULL)
+	if ((tree = (git_tree *)git_java_object_native(env, repo_java, tree_java, GIT_OBJ_TREE)) == NULL)
 		goto done;
 
 	if ((tree_entry = git_tree_entry_byindex(tree, (size_t)entry_idx)) == NULL) {
@@ -277,14 +397,7 @@ Java_org_libgit2_jagged_core_NativeMethods_treeGetEntry(
 		goto done;
 	}
 
-	if ((name_java = git_java_utf8_to_jstring(env, git_tree_entry_name(tree_entry))) == NULL ||
-		(oid_java = git_java_objectid_init(env, git_tree_entry_id(tree_entry))) == NULL)
-		goto done;
-
-	type = git_tree_entry_type(tree_entry);
-	mode = git_tree_entry_filemode(tree_entry);
-
-	tree_entry_java = (*env)->NewObject(env, tree_entry_class, tree_entry_initmethod, name_java, oid_java, type, mode);
+	tree_entry_java = git_java_tree_entry_init(env, repo_java, tree_entry);
 
 done:
 	git_tree_free(tree);

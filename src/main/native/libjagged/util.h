@@ -168,7 +168,7 @@ git_java_handle_get(JNIEnv *env, jobject obj)
 	obj_gethandlemethod = (*env)->GetMethodID(env, obj_class, "getHandle", "()J");
 
 	if (obj_gethandlemethod == NULL) {
-		git_java_exception_throw(env, "object class setHandle method not found");
+		git_java_exception_throw(env, "object class getHandle method not found");
 		return 0;
 	}
 

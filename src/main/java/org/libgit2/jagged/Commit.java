@@ -1,5 +1,8 @@
 package org.libgit2.jagged;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.libgit2.jagged.core.Lazy;
 import org.libgit2.jagged.core.NativeMethods;
 
@@ -12,6 +15,15 @@ public class Commit
         protected Metadata call()
         {
             return NativeMethods.commitGetMetadata(Commit.this.getRepository(), Commit.this);
+        }
+    };
+
+    private final Lazy<Collection<Commit>> parents = new Lazy<Collection<Commit>>()
+    {
+        @Override
+        protected Collection<Commit> call()
+        {
+            return Arrays.asList(NativeMethods.commitGetParents(Commit.this.getRepository(), Commit.this));
         }
     };
 
@@ -28,6 +40,11 @@ public class Commit
     public Signature getAuthor()
     {
         return metadata.getValue().getAuthor();
+    }
+
+    public Collection<Commit> getParents()
+    {
+        return parents.getValue();
     }
 
     public static class Metadata

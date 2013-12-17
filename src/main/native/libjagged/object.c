@@ -34,6 +34,30 @@ done:
 	return object;
 }
 
+GIT_INLINE(jobject) git_java_object_init(JNIEnv *env, jobject repo_java, jobject oid_java, git_object *object)
+{
+	jclass object_class;
+	jmethodID object_initmethod;
+	git_otype type;
+	const char *object_classname;
+
+	switch((type = git_object_type(object)))
+	{
+	case GIT_OBJ_COMMIT:
+		object_classname = GIT_JAVA_CLASS_COMMIT;
+		break;
+	default:
+		git_java_exception_throw(env, "unknown object type: %d", type);
+		return NULL;
+	}
+
+	if ((object_class = (*env)->FindClass(env, object_classname)) == NULL ||
+		(object_initmethod = (*env)->GetMethodID(env, object_class, "<init>", "(Lorg/libgit2/jagged/Repository;Lorg/libgit2/jagged/ObjectId;)V")) == NULL)
+		return NULL;
+
+	return (*env)->NewObject(env, object_class, object_initmethod, repo_java, oid_java);
+}
+
 JNIEXPORT jobject JNICALL
 Java_org_libgit2_jagged_core_NativeMethods_objectLookup(
 	JNIEnv *env,
@@ -45,10 +69,7 @@ Java_org_libgit2_jagged_core_NativeMethods_objectLookup(
 	git_repository *repo;
 	git_oid oid;
 	git_object *object = NULL;
-	jclass object_class;
-	jmethodID object_initmethod;
 	jobject object_java = NULL;
-	const char *object_classname;
 	int error = 0;
 
 	assert(env);
@@ -65,23 +86,7 @@ Java_org_libgit2_jagged_core_NativeMethods_objectLookup(
 		goto done;
 	}
 
-	type = git_object_type(object);
-
-	switch(type)
-	{
-	case GIT_OBJ_COMMIT:
-		object_classname = GIT_JAVA_CLASS_COMMIT;
-		break;
-	default:
-		git_java_exception_throw(env, "unknown object type: %d", type);
-		break;
-	}
-
-	if ((object_class = (*env)->FindClass(env, object_classname)) == NULL ||
-		(object_initmethod = (*env)->GetMethodID(env, object_class, "<init>", "(Lorg/libgit2/jagged/Repository;Lorg/libgit2/jagged/ObjectId;)V")) == NULL)
-		goto done;
-
-	object_java = (*env)->NewObject(env, object_class, object_initmethod, repo_java, oid_java);
+	object_java = git_java_object_init(env, repo_java, oid_java, object);
 
 done:
 	git_object_free(object);
@@ -93,7 +98,7 @@ Java_org_libgit2_jagged_core_NativeMethods_commitGetMetadata(
 	JNIEnv *env,
 	jclass class,
 	jobject repo_java,
-	jobject object_java)
+	jobject commit_java)
 {
 	jclass signature_class, metadata_class;
 	jmethodID signature_initmethod, metadata_initmethod;
@@ -108,7 +113,7 @@ Java_org_libgit2_jagged_core_NativeMethods_commitGetMetadata(
 		(signature_initmethod = (*env)->GetMethodID(env, signature_class, "<init>", "(Ljava/lang/String;Ljava/lang/String;)V")) == NULL ||
 		(metadata_class = (*env)->FindClass(env, "org/libgit2/jagged/Commit$Metadata")) == NULL ||
 		(metadata_initmethod = (*env)->GetMethodID(env, metadata_class, "<init>", "(Lorg/libgit2/jagged/Signature;Lorg/libgit2/jagged/Signature;)V")) == NULL ||
-		(commit = (git_commit *)git_java_object_native(env, repo_java, object_java, GIT_OBJ_COMMIT)) == NULL)
+		(commit = (git_commit *)git_java_object_native(env, repo_java, commit_java, GIT_OBJ_COMMIT)) == NULL)
 		goto done;
 
 	committer = git_commit_committer(commit);
@@ -128,4 +133,53 @@ done:
 	git_commit_free(commit);
 
 	return metadata_java;
+}
+
+JNIEXPORT jobjectArray JNICALL
+Java_org_libgit2_jagged_core_NativeMethods_commitGetParents(
+	JNIEnv *env,
+	jclass class,
+	jobject repo_java,
+	jobject commit_java)
+{
+	jclass commit_class;
+	git_commit *commit = NULL, *parent = NULL;
+	jobjectArray parents_java = NULL;
+	jobject oid_java, parent_java;
+	unsigned int parents_len, i;
+	int error;
+
+	GIT_UNUSED(class);
+
+	if ((commit = (git_commit *)git_java_object_native(env, repo_java, commit_java, GIT_OBJ_COMMIT)) == NULL ||
+		(commit_class = (*env)->FindClass(env, GIT_JAVA_CLASS_COMMIT)) == NULL)
+		goto done;
+
+	parents_len = git_commit_parentcount(commit);
+
+	if ((parents_java = (*env)->NewObjectArray(env, parents_len, commit_class, NULL)) == NULL)
+		goto done;
+
+	for (i = 0; i < parents_len; ++i) {
+		if ((error = git_commit_parent(&parent, commit, i)) < 0) {
+			git_java_exception_throw_giterr(env, error);
+			git_commit_free(parent);
+			goto done;
+		}
+
+		if ((oid_java = git_java_objectid_init(env, git_commit_id(parent))) == NULL ||
+			(parent_java = git_java_object_init(env, repo_java, oid_java, (git_object *)parent)) == NULL) {
+			git_commit_free(parent);
+			goto done;
+		}
+
+		(*env)->SetObjectArrayElement(env, parents_java, i, parent_java);
+		git_commit_free(parent);
+	}
+
+done:
+	git_commit_free(commit);
+
+	return parents_java;
+
 }

@@ -52,6 +52,8 @@ public class NativeMethods
 
     public static native Commit.Metadata commitGetMetadata(Repository repository, Commit commit);
 
+    public static native Commit[] commitGetParents(Repository repository, Commit commit);
+
     /*
      * Options
      */

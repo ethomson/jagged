@@ -7,13 +7,14 @@ import java.nio.ByteBuffer;
 public class BlobContentStream
     extends InputStream
 {
-    private final NativeHandle handle = new NativeHandle();
     private final ByteBuffer byteBuffer;
 
-    private BlobContentStream(final long handle, final ByteBuffer byteBuffer)
+    private final NativeHandle blobHandle = new NativeHandle();
+
+    protected BlobContentStream(final ByteBuffer byteBuffer, final long blobHandle)
     {
-        this.handle.set(handle);
         this.byteBuffer = byteBuffer;
+        this.blobHandle.set(blobHandle);
     }
 
     @Override
@@ -47,14 +48,14 @@ public class BlobContentStream
     }
 
     @SuppressWarnings("unused")
-    private long getHandle()
+    private long getBlobHandle()
     {
-        return handle.get();
+        return blobHandle.get();
     }
 
     @Override
     public void close()
     {
-        NativeMethods.blobCloseContentStream(this);
+        NativeMethods.blobFree(blobHandle.get());
     }
 }

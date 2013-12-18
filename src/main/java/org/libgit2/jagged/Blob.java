@@ -40,4 +40,12 @@ public class Blob
     {
         return NativeMethods.blobGetRawContentStream(Blob.this.getRepository(), Blob.this);
     }
+
+    public InputStream getContentStream(FilteringOptions filterOptions)
+    {
+        return NativeMethods.blobGetFilteredContentStream(
+            Blob.this.getRepository(),
+            Blob.this,
+            filterOptions.getHintPath());
+    }
 }

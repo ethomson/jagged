@@ -1,5 +1,8 @@
 package org.libgit2.jagged.core;
 
+import java.io.InputStream;
+
+import org.libgit2.jagged.Blob;
 import org.libgit2.jagged.Commit;
 import org.libgit2.jagged.GitObject;
 import org.libgit2.jagged.ObjectId;
@@ -52,13 +55,21 @@ public class NativeMethods
 
     public static native <T extends GitObject> T objectLookup(Repository repository, ObjectId oid, int type);
 
+    public static native void blobCloseContentStream(BlobContentStream blobContentStream);
+
+    public static native InputStream blobGetRawContentStream(Repository repository, Blob blob);
+
+    public static native BlobMetadata blobGetMetadata(Repository repository, Blob blob);
+
     public static native CommitMetadata commitGetMetadata(Repository repository, Commit commit);
 
     public static native Commit[] commitGetParents(Repository repository, Commit commit);
 
     public static native Tree commitGetTree(Repository repository, Commit commit);
 
-    public static native TreeEntry treeGetEntry(Repository repository, Tree tree, long entryIndex);
+    public static native TreeEntry treeGetEntryByIndex(Repository repository, Tree tree, long entryIndex);
+
+    public static native TreeEntry treeGetEntryByName(Repository repository, Tree tree, String name);
 
     public static native long treeGetEntryCount(Repository repository, Tree tree);
 

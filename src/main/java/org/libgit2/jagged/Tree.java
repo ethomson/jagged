@@ -21,7 +21,7 @@ public class Tree
         }
     };
 
-    private Tree(Repository repo, ObjectId id)
+    Tree(Repository repo, ObjectId id)
     {
         super(repo, id);
     }
@@ -34,6 +34,18 @@ public class Tree
     public long getEntryCount()
     {
         return entryCount.getValue().longValue();
+    }
+
+    /**
+     * Retrieves the entry in this tree by name.
+     * 
+     * @param name
+     *        The name of the entry
+     * @return The entry in question or {@code null} if it was not found.
+     */
+    public TreeEntry getEntry(String name)
+    {
+        return NativeMethods.treeGetEntryByName(getRepository(), this, name);
     }
 
     /**
@@ -64,7 +76,7 @@ public class Tree
 
         public TreeEntry next()
         {
-            return NativeMethods.treeGetEntry(Tree.this.getRepository(), Tree.this, index++);
+            return NativeMethods.treeGetEntryByIndex(Tree.this.getRepository(), Tree.this, index++);
         }
 
         public void remove()

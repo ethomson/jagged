@@ -1,5 +1,7 @@
 package org.libgit2.jagged;
 
+import java.text.MessageFormat;
+
 import org.libgit2.jagged.core.HashCode;
 
 /**
@@ -7,13 +9,16 @@ import org.libgit2.jagged.core.HashCode;
  */
 public class TreeEntry
 {
+    private final Repository repository;
+
     private final String name;
     private final ObjectId id;
     private final ObjectType type;
     private final Mode mode;
 
-    private TreeEntry(String name, ObjectId id, int type, int mode)
+    private TreeEntry(Repository repository, String name, ObjectId id, int type, int mode)
     {
+        this.repository = repository;
         this.name = name;
         this.id = id;
         this.type = ObjectType.valueOf(type);
@@ -58,6 +63,22 @@ public class TreeEntry
     public Mode getMode()
     {
         return mode;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends GitObject> T realize()
+    {
+        switch (type)
+        {
+            case COMMIT:
+                return (T) new Commit(repository, id);
+            case TREE:
+                return (T) new Tree(repository, id);
+            case BLOB:
+                return (T) new Blob(repository, id);
+            default:
+                throw new IllegalStateException(MessageFormat.format("Unknown git object type: {0}", type));
+        }
     }
 
     @Override

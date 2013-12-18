@@ -19,7 +19,7 @@ public abstract class GitObject
      * 
      * @return The {@link Repository}
      */
-    public final Repository getRepository()
+    protected final Repository getRepository()
     {
         return repository;
     }

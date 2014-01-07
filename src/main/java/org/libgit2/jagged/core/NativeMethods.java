@@ -55,9 +55,15 @@ public class NativeMethods
 
     public static native <T extends GitObject> T objectLookup(Repository repository, ObjectId oid, int type);
 
-    public static native void blobCloseContentStream(BlobContentStream blobContentStream);
+    public static native void blobFilteredBufFree(long bufHandle);
+
+    public static native void blobFree(long blobHandle);
 
     public static native InputStream blobGetRawContentStream(Repository repository, Blob blob);
+
+    public static native void blobCloseFilteredContentStream(BlobFilteredContentStream blobContentStream);
+
+    public static native InputStream blobGetFilteredContentStream(Repository repository, Blob blob, String hintPath);
 
     public static native BlobMetadata blobGetMetadata(Repository repository, Blob blob);
 

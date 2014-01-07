@@ -102,17 +102,34 @@ done:
 }
 
 JNIEXPORT void JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_blobCloseContentStream(
+Java_org_libgit2_jagged_core_NativeMethods_blobFilteredBufFree(
 	JNIEnv *env,
 	jclass class,
-	jobject blobcontentstream_java)
+	jlong handle_java)
+{
+	git_buf *buf;
+
+	GIT_UNUSED(env);
+	GIT_UNUSED(class);
+
+	buf = git_java_ptr_from_jlong(handle_java);
+
+	git_buf_free(buf);
+	free(buf);
+}
+
+JNIEXPORT void JNICALL
+Java_org_libgit2_jagged_core_NativeMethods_blobFree(
+	JNIEnv *env,
+	jclass class,
+	jlong handle_java)
 {
 	git_blob *blob;
 
 	GIT_UNUSED(env);
 	GIT_UNUSED(class);
 
-	blob = git_java_handle_get(env, blobcontentstream_java);
+	blob = git_java_ptr_from_jlong(handle_java);
 
 	git_blob_free(blob);
 }
@@ -132,12 +149,62 @@ Java_org_libgit2_jagged_core_NativeMethods_blobGetRawContentStream(
 	GIT_UNUSED(class);
 
 	if ((stream_class = (*env)->FindClass(env, "org/libgit2/jagged/core/BlobContentStream")) == NULL ||
-		(stream_initmethod = (*env)->GetMethodID(env, stream_class, "<init>", "(JLjava/nio/ByteBuffer;)V")) == NULL ||
+		(stream_initmethod = (*env)->GetMethodID(env, stream_class, "<init>", "(Ljava/nio/ByteBuffer;J)V")) == NULL ||
 		(blob = (git_blob *)git_java_object_native(env, repo_java, blob_java, GIT_OBJ_BLOB)) == NULL ||
 		(bytebuffer_java = (*env)->NewDirectByteBuffer(env, (void *)git_blob_rawcontent(blob), git_blob_rawsize(blob))) == NULL)
 		return NULL;
 
-    return (*env)->NewObject(env, stream_class, stream_initmethod, git_java_jlong_from_ptr(blob), bytebuffer_java);
+    return (*env)->NewObject(env, stream_class, stream_initmethod, bytebuffer_java, git_java_jlong_from_ptr(blob));
+}
+
+JNIEXPORT jobject JNICALL
+Java_org_libgit2_jagged_core_NativeMethods_blobGetFilteredContentStream(
+	JNIEnv *env,
+	jclass class,
+	jobject repo_java,
+	jobject blob_java,
+	jstring hintpath_java)
+{
+	jclass stream_class;
+	jmethodID stream_initmethod;
+	jobject bytebuffer_java, stream_java = NULL;
+	const char *hintpath = NULL;
+	git_blob *blob = NULL;
+	git_buf *buf = NULL;
+	int error;
+
+	GIT_UNUSED(class);
+
+	if ((stream_class = (*env)->FindClass(env, "org/libgit2/jagged/core/BlobFilteredContentStream")) == NULL ||
+		(stream_initmethod = (*env)->GetMethodID(env, stream_class, "<init>", "(Ljava/nio/ByteBuffer;JJ)V")) == NULL ||
+		(hintpath = git_java_jstring_to_utf8(env, hintpath_java)) == NULL ||
+		(blob = (git_blob *)git_java_object_native(env, repo_java, blob_java, GIT_OBJ_BLOB)) == NULL)
+		goto on_error;
+
+	if ((buf = calloc(1, sizeof(git_buf))) == NULL) {
+		git_java_exception_throw_oom(env);
+		goto on_error;
+	}
+
+	if ((error = git_blob_filtered_content(buf, blob, hintpath, 1)) < 0) {
+		git_java_exception_throw_giterr(env, error);
+		goto on_error;
+	}
+
+	if ((bytebuffer_java = (*env)->NewDirectByteBuffer(env, buf->ptr, buf->size)) == NULL)
+		goto on_error;
+
+    stream_java = (*env)->NewObject(env, stream_class, stream_initmethod, bytebuffer_java, git_java_jlong_from_ptr(blob), git_java_jlong_from_ptr(buf));
+
+    goto done;
+
+on_error:
+	free(buf);
+
+done:
+	git_java_utf8_free(env, hintpath_java, hintpath);
+
+	return stream_java;
 }
 
 JNIEXPORT jobject JNICALL

@@ -45,6 +45,8 @@ public class BlobTest
     public void testGetRawContent()
         throws IOException
     {
+        byte[] expected = "This is file two!\n".getBytes();
+
         final File repoPath = setupRepository("testrepo");
         Repository repository = new Repository(repoPath.getAbsolutePath());
 
@@ -55,10 +57,11 @@ public class BlobTest
 
         try
         {
-            byte[] buf = new byte[18];
+            byte[] buf = new byte[expected.length];
 
-            Assert.assertEquals(18, contentStream.read(buf, 0, 32));
-            Assert.assertArrayEquals("This is file two!\n".getBytes(), buf);
+            Assert.assertEquals(expected.length, contentStream.read(buf, 0, expected.length));
+            Assert.assertEquals(-1, contentStream.read());
+            Assert.assertArrayEquals(expected, buf);
         }
         finally
         {
@@ -72,9 +75,15 @@ public class BlobTest
     public void testGetFilteredContent()
         throws IOException
     {
-        if (!Platform.getCurrentPlatform().getOperatingSystem().equals(OperatingSystem.WINDOWS))
+        byte[] expected;
+
+        if (Platform.getCurrentPlatform().getOperatingSystem().equals(OperatingSystem.WINDOWS))
         {
-            return;
+            expected = "This is file two!\r\n".getBytes();
+        }
+        else
+        {
+            expected = "This is file two!\n".getBytes();
         }
 
         final File repoPath = setupRepository("testrepo");
@@ -87,10 +96,11 @@ public class BlobTest
 
         try
         {
-            byte[] buf = new byte[19];
+            byte[] buf = new byte[expected.length];
 
-            Assert.assertEquals(19, contentStream.read(buf, 0, 32));
-            Assert.assertArrayEquals("This is file two!\r\n".getBytes(), buf);
+            Assert.assertEquals(expected.length, contentStream.read(buf, 0, expected.length));
+            Assert.assertEquals(-1, contentStream.read());
+            Assert.assertArrayEquals(expected, buf);
         }
         finally
         {

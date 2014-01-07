@@ -21,7 +21,7 @@ public class BlobContentStream
     public int read()
         throws IOException
     {
-        if (byteBuffer.hasRemaining())
+        if (!byteBuffer.hasRemaining())
         {
             return -1;
         }
@@ -32,14 +32,16 @@ public class BlobContentStream
     @Override
     public int read(byte[] buf, int offset, int len)
     {
-        if (byteBuffer.remaining() == 0)
+        int remain;
+
+        if ((remain = byteBuffer.remaining()) == 0)
         {
             return -1;
         }
 
-        if (len > byteBuffer.remaining())
+        if (len > remain)
         {
-            len = byteBuffer.remaining();
+            len = remain;
         }
 
         byteBuffer.get(buf, offset, len);

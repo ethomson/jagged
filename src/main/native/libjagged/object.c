@@ -194,11 +194,13 @@ Java_org_libgit2_jagged_core_NativeMethods_blobGetFilteredContentStream(
 	if ((bytebuffer_java = (*env)->NewDirectByteBuffer(env, buf->ptr, buf->size)) == NULL)
 		goto on_error;
 
-    stream_java = (*env)->NewObject(env, stream_class, stream_initmethod, bytebuffer_java, git_java_jlong_from_ptr(blob), git_java_jlong_from_ptr(buf));
+    if ((stream_java = (*env)->NewObject(env, stream_class, stream_initmethod, bytebuffer_java, git_java_jlong_from_ptr(blob), git_java_jlong_from_ptr(buf))) == NULL)
+    		goto on_error;
 
     goto done;
 
 on_error:
+	git_buf_free(buf);
 	free(buf);
 
 done:

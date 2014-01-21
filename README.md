@@ -16,7 +16,7 @@ work.  It turns out that it might.
 
 You probably actually want to be using [jgit][2].
 
-[2]: http://www.jgit.org
+[2]: http://www.eclipse.org/jgit/
 
 ## How do I work with this?
 
@@ -51,6 +51,6 @@ Quick start guide for those unfamiliar with Maven and Eclipse:
 
 ## License
 
-Available under the MIT license (refer to the [LICENSE][2] file).
+Available under the MIT license (refer to the [LICENSE][3] file).
 
 [2]: https://github.com/ethomson/jagged/blob/master/LICENSE

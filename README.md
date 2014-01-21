@@ -53,4 +53,4 @@ Quick start guide for those unfamiliar with Maven and Eclipse:
 
 Available under the MIT license (refer to the [LICENSE][3] file).
 
-[2]: https://github.com/ethomson/jagged/blob/master/LICENSE
+[3]: https://github.com/ethomson/jagged/blob/master/LICENSE

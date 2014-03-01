@@ -125,6 +125,28 @@ Java_org_libgit2_jagged_core_NativeMethods_repositoryHead(
 	return ref_java;
 }
 
+JNIEXPORT jobject JNICALL
+Java_org_libgit2_jagged_core_NativeMethods_repositoryIsBare(
+	JNIEnv *env,
+	jclass class,
+	jobject repo_java)
+{
+	git_repository *repo;
+	git_reference *ref = NULL;
+	jobject ref_java;
+	int error, is_bare;
+
+	assert(env);
+	assert(class);
+	assert(repo_java);
+
+	repo = git_java_handle_get(env, repo_java);
+
+	is_bare = git_repository_is_bare(repo);
+
+	return is_bare ? JNI_TRUE : JNI_FALSE;
+}
+
 JNIEXPORT void JNICALL
 Java_org_libgit2_jagged_core_NativeMethods_repositoryFree(
 	JNIEnv *env,

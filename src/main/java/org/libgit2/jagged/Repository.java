@@ -29,6 +29,7 @@ public class Repository
         Ensure.argumentNotNullOrEmpty(path, "path");
 
         NativeMethods.repositoryOpen(this, path);
+        bare = NativeMethods.repositoryIsBare(this);
 
         Ensure.nativeNotNull(handle);
     }

@@ -126,4 +126,6 @@ public class NativeMethods
     public static native Repository repositoryInit(String path, boolean bare);
 
     public static native void repositoryOpen(Repository repository, String path);
+
+    public static native boolean repositoryIsBare(Repository repository);
 }

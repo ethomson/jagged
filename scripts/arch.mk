@@ -13,7 +13,7 @@ ifeq ($(OS),Linux)
 endif
 
 # Update processor names to canonical format
-ARCH=$(shell uname -p)
+ARCH=$(shell uname -m)
 
 ifeq ($(ARCH),i386)
 	ARCH=x86

@@ -34,6 +34,10 @@ public abstract class GitTest
             {
                 tempRoot = new File(System.getenv("TEMP"));
             }
+            else if (System.getProperty("java.io.tmpdir") != null)
+            {
+                tempRoot = new File(System.getProperty("java.io.tmpdir"));
+            }
             else
             {
                 throw new RuntimeException(

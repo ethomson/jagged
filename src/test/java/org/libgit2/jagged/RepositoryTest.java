@@ -65,6 +65,21 @@ public class RepositoryTest
     }
 
     @Test
+    public void testOpenBareRepository()
+    {
+	final File repoPath = getTempDir();
+
+	Repository repository = Repository.init(repoPath.getAbsolutePath(), true);
+	Repository repository2 = new Repository(repoPath.getAbsolutePath());
+
+	Assert.assertTrue(repository.isBare());
+	Assert.assertTrue(repository2.isBare());
+
+	repository.dispose();
+	repository2.dispose();
+    }
+
+    @Test
     public void testClone()
     {
         final File repoPath = setupRepository("testrepo");

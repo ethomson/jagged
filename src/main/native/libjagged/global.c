@@ -70,14 +70,14 @@ Java_org_libgit2_jagged_core_NativeMethods_globalThreadsShutdown(
 }
 
 JNIEXPORT jint JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_globalGetCapabilities(
+Java_org_libgit2_jagged_core_NativeMethods_globalGetFeatures(
 	JNIEnv *env,
 	jclass class)
 {
 	GIT_UNUSED(env);
 	GIT_UNUSED(class);
 
-	return git_libgit2_capabilities();
+	return git_libgit2_features();
 }
 
 JNIEXPORT jobject JNICALL

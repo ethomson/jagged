@@ -5,6 +5,8 @@
 
 #include <jni.h>
 
+#include "util.h"
+
 #define GIT_JAVA_CLASS_OID "org/libgit2/jagged/ObjectId"
 
 GIT_INLINE(jobject) git_java_objectid_init(JNIEnv *env, const git_oid *oid)

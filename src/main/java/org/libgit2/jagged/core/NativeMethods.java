@@ -45,7 +45,7 @@ public class NativeMethods
 
     public static native void globalThreadsShutdown();
 
-    public static native int globalGetCapabilities();
+    public static native int globalGetFeatures();
 
     public static native Version globalGetLibGit2Version();
 

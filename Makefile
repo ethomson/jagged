@@ -8,9 +8,9 @@ include scripts/arch.mk
 NATIVE_INSTALL=${CURDIR}/native
 NATIVE_TARGET=${CURDIR}/target/native
 
-LIBGIT2_TARGET=${CURDIR}/$(NATIVE_TARGET)/libgit2
-LIBJAGGED_TARGET=${CURDIR}/$(NATIVE_TARGET)/libjagged
-LIBJAGGED_TEST_TARGET=${CURDIR}/$(NATIVE_TARGET)/libjagged_test
+LIBGIT2_TARGET=$(NATIVE_TARGET)/libgit2
+LIBJAGGED_TARGET=$(NATIVE_TARGET)/libjagged
+LIBJAGGED_TEST_TARGET=$(NATIVE_TARGET)/libjagged_test
 
 LIBGIT2_SRC=${CURDIR}/src/main/native/libgit2
 LIBJAGGED_SRC=${CURDIR}/src/main/native/libjagged
@@ -29,6 +29,8 @@ install: install_libgit2 install_libjagged install_libjagged_test
 clean: clean_libgit2 clean_libjagged clean_libjagged_test
 
 build_libgit2: $(LIBGIT2_SRC)/src
+	echo ${CURDIR}
+	echo $(LIBGIT2_TARGET)
 	@mkdir -p $(LIBGIT2_TARGET)
 	(cd $(LIBGIT2_TARGET) && \
 	 cmake $(LIBGIT2_SRC) -DSONAME=OFF -DTHREADSAFE=ON -DBUILD_CLAR=OFF \

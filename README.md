@@ -22,14 +22,29 @@ You probably actually want to be using [jgit][2].
 
 Apologies to Maven lovers, this setup is abysmal at the moment.
 
-1. Get the included libgit2 submodule:
+
+1. Get the included libgit2 submodule:  
+
         git submodule init
         git submodule update
 
-2. Build the natives (libgit2 and libjagged) for your platform, and copy
-   them into the `native` directory:
-        cd src/main/native
-        make install
+
+2. Build the natives (libgit2 and libjagged) for your platform, 
+
+ i) To build libgit2  
+
+        cd src/main/native/libgit2
+        mkdir build && cd build
+        cmake ..
+        make
+        sudo make install #WARNING: This will install libgit2 on your system
+
+ ii) To build libjagged  
+
+            cd src/main/native/libjagged
+            mkdir build && cd build
+            cmake ..  #If this fails because of missing JNI, follow this SO thread http://stackoverflow.com/a/21383730/377816
+            make
 
 3. Now you can build the Java (eg `mvn install`).
 

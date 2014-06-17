@@ -23,15 +23,19 @@ You probably actually want to be using [jgit][2].
 Apologies to Maven lovers, this setup is abysmal at the moment.
 
 1. Get the included libgit2 submodule:
+
         git submodule init
         git submodule update
 
 2. Build the natives (libgit2 and libjagged) for your platform, and copy
    them into the `native` directory:
+
         cd src/main/native
         make install
 
-3. Now you can build the Java (eg `mvn install`).
+3. Now you can build the Java:
+
+        mvn install
 
 ## Using Eclipse
 

@@ -8,8 +8,8 @@ if "%Platform%" == "X64" set ARCH=x86_64
 if "%Platform%" == "" set ARCH=x86
 
 if "%ARCH%" == "" goto archerror
-if "%ARCH%" == "x86" set TARGET_PLATFORM="Visual Studio 11"
-if "%ARCH%" == "x86_64" set TARGET_PLATFORM="Visual Studio 11 Win64"
+if "%ARCH%" == "x86" set TARGET_PLATFORM="Visual Studio 12"
+if "%ARCH%" == "x86_64" set TARGET_PLATFORM="Visual Studio 12 Win64"
 
 if "%CMAKE_CONFIG%" == "" set CMAKE_CONFIG=RelWithDebInfo
 

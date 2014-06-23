@@ -4,8 +4,8 @@
 #include <jni.h>
 #include <git2.h>
 
-#include "repository.h"
 #include "util.h"
+#include "repository.h"
 #include "oid.h"
 
 #define GIT_JAVA_CLASS_COMMIT "org/libgit2/jagged/Commit"

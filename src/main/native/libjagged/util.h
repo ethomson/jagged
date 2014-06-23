@@ -16,6 +16,12 @@
 
 #define GIT_UNUSED(x) ((void)(x))
 
+#ifdef _MSC_VER
+# define GIT_INLINE(type) static __inline type
+#else
+# define GIT_INLINE(type) static inline type
+#endif
+
 #include "exception.h"
 
 #define GITERR_CHECK_ALLOC(ptr) \

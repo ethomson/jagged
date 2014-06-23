@@ -76,12 +76,13 @@ Java_org_libgit2_jagged_core_NativeMethods_optionGetSearchPath(
 	jclass class,
 	jint level)
 {
-	char buf[4096];
+	git_buf buf = {0};
+	jstring out;
 	int error = 0;
 
 	GIT_UNUSED(class);
 
-	if ((error = git_libgit2_opts(GIT_OPT_GET_SEARCH_PATH, level, buf, 4096)) < 0 &&
+	if ((error = git_libgit2_opts(GIT_OPT_GET_SEARCH_PATH, level, &buf)) < 0 &&
 		error == GIT_EBUFS) {
 		git_java_exception_throw(env, "search path too large");
 		return NULL;
@@ -90,7 +91,11 @@ Java_org_libgit2_jagged_core_NativeMethods_optionGetSearchPath(
 		return NULL;
 	}
 
-	return git_java_utf8_to_jstring(env, buf);
+	out = git_java_utf8_to_jstring(env, buf.ptr);
+
+	git_buf_free(&buf);
+
+	return out;
 }
 
 JNIEXPORT void JNICALL
@@ -101,6 +106,7 @@ Java_org_libgit2_jagged_core_NativeMethods_optionSetSearchPath(
 	jstring path_java)
 {
 	const char *path = NULL;
+	git_buf buf = {0};
 	int error = 0;
 
 	GIT_UNUSED(class);

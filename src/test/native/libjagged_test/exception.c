@@ -44,7 +44,7 @@ Java_org_libgit2_jagged_core_NativeTestMethods_throwFormattedString2(
 {
 	GIT_UNUSED(class);
 
-	git_java_exception_throw(env, "%d Another %3d formatted %03d exception %1.3f message", 7, 7, 7, ((float)15.3/(float)3));
+	git_java_exception_throw(env, "%d Another %3d formatted %03d exception %d message", 7, 7, 7, 21);
 }
 
 JNIEXPORT void JNICALL

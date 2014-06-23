@@ -69,7 +69,7 @@ public class ExceptionTest
             {
                 NativeTestMethods.throwFormattedString2();
             }
-        }, GitException.class, "7 Another   7 formatted 007 exception 5.100 message");
+        }, GitException.class, "7 Another   7 formatted 007 exception 21 message");
     }
 
     @Test

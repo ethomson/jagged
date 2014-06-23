@@ -181,5 +181,5 @@ Java_org_libgit2_jagged_core_NativeMethods_optionGetCachedStatistics(
 		(statistics_ctormethod = (*env)->GetMethodID(env, statistics_class, "<init>", "(JJ)V")) == NULL)
 		return NULL;
 
-	return (*env)->NewObject(env, statistics_class, statistics_ctormethod, used, max);
+	return (*env)->NewObject(env, statistics_class, statistics_ctormethod, (jlong)used, (jlong)max);
 }

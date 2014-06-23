@@ -125,7 +125,7 @@ Java_org_libgit2_jagged_core_NativeMethods_repositoryHead(
 	return ref_java;
 }
 
-JNIEXPORT jobject JNICALL
+JNIEXPORT jboolean JNICALL
 Java_org_libgit2_jagged_core_NativeMethods_repositoryIsBare(
 	JNIEnv *env,
 	jclass class,
@@ -133,8 +133,7 @@ Java_org_libgit2_jagged_core_NativeMethods_repositoryIsBare(
 {
 	git_repository *repo;
 	git_reference *ref = NULL;
-	jobject ref_java;
-	int error, is_bare;
+	int is_bare;
 
 	assert(env);
 	assert(class);

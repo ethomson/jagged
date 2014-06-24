@@ -56,10 +56,9 @@ public class BuiltInFeatures
     }
 
     /**
-     * Queries whether the given features are supported. If a set of
-     * multiple features have been created with the
-     * {@link #combine(BuiltInFeatures...)} method, all features will be
-     * queried.
+     * Queries whether the given features are supported. If a set of multiple
+     * features have been created with the {@link #combine(BuiltInFeatures...)}
+     * method, all features will be queried.
      * 
      * @param value
      *        The features to query

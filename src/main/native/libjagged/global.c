@@ -48,25 +48,25 @@ Java_org_libgit2_jagged_core_NativeMethods_globalErrorLast(
 }
 
 JNIEXPORT void JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_globalThreadsInit(
+Java_org_libgit2_jagged_core_NativeMethods_globalLibraryInit(
 	JNIEnv *env,
 	jclass class)
 {
 	GIT_UNUSED(env);
 	GIT_UNUSED(class);
 
-	git_threads_init();
+	git_libgit2_init();
 }
 
 JNIEXPORT void JNICALL
-Java_org_libgit2_jagged_core_NativeMethods_globalThreadsShutdown(
+Java_org_libgit2_jagged_core_NativeMethods_globalLibraryShutdown(
 	JNIEnv *env,
 	jclass class)
 {
 	GIT_UNUSED(env);
 	GIT_UNUSED(class);
 
-	git_threads_shutdown();
+	git_libgit2_shutdown();
 }
 
 JNIEXPORT jint JNICALL

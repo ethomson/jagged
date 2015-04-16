@@ -23,14 +23,14 @@ public class NativeMethods
         NativeLoader.load("git2");
         NativeLoader.load("jagged");
 
-        globalThreadsInit();
+        globalLibraryInit();
 
         finalizer = new Object()
         {
             @Override
             public void finalize()
             {
-                globalThreadsShutdown();
+                globalLibraryShutdown();
             }
         };
     }
@@ -41,9 +41,9 @@ public class NativeMethods
 
     public static native GitError globalErrorLast();
 
-    public static native void globalThreadsInit();
+    public static native void globalLibraryInit();
 
-    public static native void globalThreadsShutdown();
+    public static native void globalLibraryShutdown();
 
     public static native int globalGetFeatures();
 

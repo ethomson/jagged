@@ -30,7 +30,7 @@ Apologies to Maven lovers, this setup is abysmal at the moment.
 2. Build the natives (libgit2 and libjagged) for your platform, and copy
    them into the `native` directory:
 
-        cd src/main/native
+        make
         make install
 
 3. Now you can build the Java:

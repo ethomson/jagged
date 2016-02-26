@@ -12,32 +12,34 @@
 
 #define GIT_JAVA_CLASS_EXCEPTION "org/libgit2/jagged/core/GitException"
 
+GIT_INLINE(void) git_java_exception_throw_message(JNIEnv *env, const char *message)
+{
+	jclass exception_class;
+
+	assert(env);
+
+	if ((exception_class = (*env)->FindClass(env, GIT_JAVA_CLASS_EXCEPTION)) == NULL ||
+		(*env)->ThrowNew(env, exception_class, message) != 0)
+		(*env)->FatalError(env, message);
+}
+
 GIT_INLINE(void) git_java_exception_throw_giterr(
 	JNIEnv *env,
 	int error_type)
 {
 	const git_error *error = giterr_last();
-	const char *classname;
-	jclass exception_class;
 
-	assert(env);
 	assert(error);
 
 	/* TODO: switch based on type */
 	GIT_UNUSED(error_type);
 
-	classname = GIT_JAVA_CLASS_EXCEPTION;
-
-	if ((exception_class = (*env)->FindClass(env, classname)) == NULL ||
-		(*env)->ThrowNew(env, exception_class, error->message) != 0)
-		(*env)->FatalError(env, error->message);
+	git_java_exception_throw_message(env, error->message);
 }
 
 GIT_INLINE(void) git_java_exception_throw_errno(
 	JNIEnv *env)
 {
-	jclass exception_class;
-
 #ifdef GIT_WIN32
 	char message[256];
 
@@ -47,9 +49,7 @@ GIT_INLINE(void) git_java_exception_throw_errno(
 #else
 	char *message = strerror(errno);
 #endif
-	if((exception_class = (*env)->FindClass(env, GIT_JAVA_CLASS_EXCEPTION)) == NULL ||
-		(*env)->ThrowNew(env, exception_class, message) != 0)
-		(*env)->FatalError(env, message);
+	git_java_exception_throw_message(env, message);
 }
 
 GIT_INLINE(void) git_java_exception_throw_oom(JNIEnv *env)
@@ -70,7 +70,6 @@ GIT_INLINE(void) git_java_exception_throw(JNIEnv *env, const char *fmt, ...)
 
 GIT_INLINE(void) git_java_exception_throw(JNIEnv *env, const char *fmt, ...)
 {
-	jclass exception_class;
 	va_list ap;
 	char *message = NULL;
 	int ret, size;
@@ -128,9 +127,7 @@ GIT_INLINE(void) git_java_exception_throw(JNIEnv *env, const char *fmt, ...)
 		}
 	}
 
-	if ((exception_class = (*env)->FindClass(env, GIT_JAVA_CLASS_EXCEPTION)) == NULL ||
-		(*env)->ThrowNew(env, exception_class, message) != 0)
-		(*env)->FatalError(env, message);
+	git_java_exception_throw_message(env, message);
 
 done:
 	free(message);

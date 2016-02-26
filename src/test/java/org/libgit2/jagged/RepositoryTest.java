@@ -37,22 +37,12 @@ public class RepositoryTest
             @SuppressWarnings("unused")
             Repository failure = new Repository(new File(getTempDir(), "doesnotexist").getAbsolutePath());
         }
-        catch (GitException e)
+        catch (Throwable e)
         {
-            if (Platform.getCurrentPlatform().getOperatingSystem().equals(OperatingSystem.WINDOWS))
-            {
-                caught = e.getMessage().trim().endsWith("The system cannot find the file specified.");
-            }
-            else
-            {
-                caught = e.getMessage().endsWith("No such file or directory");
-            }
-
-            if (!caught)
-                throw e;
+            Assert.assertNotNull(e);
+            Assert.assertEquals(GitException.class, e.getClass());
+            Assert.assertTrue(e.getMessage().startsWith("Failed to resolve path"));
         }
-
-        Assert.assertTrue(caught);
     }
 
     @Test

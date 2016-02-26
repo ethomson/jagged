@@ -11,6 +11,8 @@ install:
   - cmd: SET PATH=C:\maven\apache-maven-3.2.5\bin;%JAVA_HOME%\bin;%PATH%
   - cmd: SET MAVEN_OPTS=-XX:MaxPermSize=2g -Xmx4g
   - cmd: SET JAVA_OPTS=-XX:MaxPermSize=2g -Xmx4g
+  - cmd: SET LIBJAGGED_CMAKE_FLAGS=-DUSE_SDL=OFF
+  - cmd: SET LIBJAGGED_TEST_CMAKE_FLAGS=-DUSE_SDL=OFF
 build_script:
   - git submodule init
   - git submodule update

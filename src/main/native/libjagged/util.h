@@ -7,7 +7,13 @@
 
 #ifdef GIT_WIN32
 # include <windows.h>
-# include <strsafe.h>
+# ifdef __CRT__NO_INLINE
+# undef __CRT__NO_INLINE
+#  include <strsafe.h>
+# define __CRT__NO_INLINE
+# else
+#  include <strsafe.h>
+# endif
 #endif
 
 #include <jni.h>

@@ -11,6 +11,10 @@ IF (NOT JNI_FOUND)
 	message(FATAL_ERROR "Could not find JNI")
 ENDIF()
 
+IF (MSVC)
+	OPTION(USE_SDL "Turn on SDL recommended checks" ON)
+ENDIF()
+
 SET(BUILD_SHARED_LIBS ON)
 
 # Platform specific compilation flags
@@ -23,7 +27,9 @@ IF (MSVC)
 	# /GS - buffers security check
 	# /D"_SDL_BANNER_RECOMMENDED=1" - banned functions
 	# /ANALYZE - code analysis (PREfast)
-	SET(CMAKE_C_FLAGS "/GS /D\"_SDL_BANNED_RECOMMENDED=1\" /analyze ${CMAKE_C_FLAGS} /D\"SECURITY_WIN32\"")
+	IF (USE_SDL)
+		SET(CMAKE_C_FLAGS "/GS /D\"_SDL_BANNED_RECOMMENDED=1\" /analyze ${CMAKE_C_FLAGS} /D\"SECURITY_WIN32\"")
+	ENDIF()
 
 	# /Zi - Create debugging information
 	# /Od - Disable optimization

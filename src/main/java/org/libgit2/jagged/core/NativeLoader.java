@@ -46,7 +46,7 @@ public class NativeLoader
         }
         else
         {
-            mappedLibraryName = System.mapLibraryName(libraryName);
+            mappedLibraryName = "lib" + System.mapLibraryName(libraryName);
         }
 
         /*

@@ -53,6 +53,16 @@ Quick start guide for those unfamiliar with Maven and Eclipse:
    "Select Root Directory" prompt, browse to the location of your jagged
    source.
 
+## Compiling with MinGW
+
+This works for me:
+
+1. Install msys2 64-bit.
+2. Start mingw64 shell (not msys shell).
+3. Remove paths starting with / from PATH, except for /mingw64/bin.
+4. ./make.cmd && ./make.cmd install.
+5. mvn install.
+
 ## License
 
 Available under the MIT license (refer to the [LICENSE][3] file).

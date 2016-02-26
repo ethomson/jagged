@@ -11,6 +11,9 @@ if "%ARCH%" == "" goto archerror
 if "%ARCH%" == "x86" set TARGET_PLATFORM="Visual Studio 12"
 if "%ARCH%" == "x86_64" set TARGET_PLATFORM="Visual Studio 12 Win64"
 
+if "%MSYSTEM%" == "MINGW64" set TARGET_PLATFORM="MinGW Makefiles"
+if "%MSYSTEM%" == "MINGW64" set ARCH=x86_64
+
 if "%CMAKE_CONFIG%" == "" set CMAKE_CONFIG=RelWithDebInfo
 
 
@@ -53,7 +56,7 @@ if not exist %LIBJAGGED_TARGET% ( mkdir %LIBJAGGED_TARGET% )
 cd %LIBJAGGED_TARGET%
 cmake %LIBJAGGED_SRC% -G%TARGET_PLATFORM% ^
  -DINCLUDE_LIBGIT2=%LIBGIT2_SRC%\include ^
- -DLINK_LIBGIT2="%LIBGIT2_TARGET%\%CMAKE_CONFIG%"
+ -DLINK_LIBGIT2="%LIBGIT2_TARGET%"
 cd %~dp0
 cmake --build %LIBJAGGED_TARGET% --config %CMAKE_CONFIG%
 if not "%errorlevel%" == "0" ( goto end )
@@ -64,9 +67,9 @@ if not exist %LIBJAGGED_TEST_TARGET% ( mkdir %LIBJAGGED_TEST_TARGET% )
 cd %LIBJAGGED_TEST_TARGET%
 cmake %LIBJAGGED_TEST_SRC% -G%TARGET_PLATFORM% ^
  -DINCLUDE_LIBGIT2=%LIBGIT2_SRC%\include ^
- -DLINK_LIBGIT2=%LIBGIT2_TARGET%\%CMAKE_CONFIG% ^
+ -DLINK_LIBGIT2=%LIBGIT2_TARGET% ^
  -DINCLUDE_LIBJAGGED=%LIBJAGGED_SRC% ^
- -DLINK_LIBJAGGED=%LIBJAGGED_TARGET%\%CMAKE_CONFIG%
+ -DLINK_LIBJAGGED=%LIBJAGGED_TARGET%
 cd %~dp0
 cmake --build %LIBJAGGED_TEST_TARGET% --config %CMAKE_CONFIG%
 if not "%errorlevel%" == "0" ( goto end )
@@ -75,9 +78,9 @@ if not "%1" == "install" ( goto end )
 
 if not exist %NATIVE_INSTALL%\%ARCH_PATH% ( mkdir %NATIVE_INSTALL%\%ARCH_PATH% )
 @echo on
-copy %LIBGIT2_TARGET%\%CMAKE_CONFIG%\git2.dll %NATIVE_INSTALL%\%ARCH_PATH%
-copy %LIBJAGGED_TARGET%\%CMAKE_CONFIG%\jagged.dll %NATIVE_INSTALL%\%ARCH_PATH%
-copy %LIBJAGGED_TEST_TARGET%\%CMAKE_CONFIG%\jagged_test.dll %NATIVE_INSTALL%\%ARCH_PATH%
+copy %LIBGIT2_TARGET%\libgit2.dll %NATIVE_INSTALL%\%ARCH_PATH%
+copy %LIBJAGGED_TARGET%\libjagged.dll %NATIVE_INSTALL%\%ARCH_PATH%
+copy %LIBJAGGED_TEST_TARGET%\libjagged_test.dll %NATIVE_INSTALL%\%ARCH_PATH%
 @echo off
 goto end
 

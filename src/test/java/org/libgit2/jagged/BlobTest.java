@@ -77,14 +77,7 @@ public class BlobTest
     {
         byte[] expected;
 
-        if (Platform.getCurrentPlatform().getOperatingSystem().equals(OperatingSystem.WINDOWS))
-        {
-            expected = "This is file two!\r\n".getBytes();
-        }
-        else
-        {
-            expected = "This is file two!\n".getBytes();
-        }
+        expected = "This is file two!\n".getBytes();
 
         final File repoPath = setupRepository("testrepo");
         Repository repository = new Repository(repoPath.getAbsolutePath());

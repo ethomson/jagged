@@ -82,7 +82,7 @@ GIT_INLINE(void) git_java_exception_throw(JNIEnv *env, const char *fmt, ...)
 		return;
 	}
 
-#ifdef _MSC_VER
+#ifdef WIN32
 	va_start(ap, fmt);
 
 	if ((size = _vscprintf(fmt, ap)) < 0) {
@@ -102,7 +102,7 @@ GIT_INLINE(void) git_java_exception_throw(JNIEnv *env, const char *fmt, ...)
 
 	while (1) {
 		va_start(ap, fmt);
-#ifdef _MSC_VER
+#ifdef WIN32
 		ret = vsnprintf_s(message, size, _TRUNCATE, fmt, ap);
 #else
 		ret = vsnprintf(message, size, fmt, ap);

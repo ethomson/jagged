@@ -61,6 +61,7 @@ public class OptionsTest
     @Test
     public void testCanResetSearchPath()
     {
+        Options.setSearchPath(ConfigurationLevel.SYSTEM, null);
         String defaultPath = Options.getSearchPath(ConfigurationLevel.SYSTEM);
 
         Options.setSearchPath(ConfigurationLevel.SYSTEM, "test");

@@ -4,17 +4,20 @@ setlocal
 
 if "%JAVA_HOME%" == "" goto javahomeerror
 
-"%JAVA_HOME%\bin\java" -d32 -version 2>NUL
-if "%ERRORLEVEL%" == "0" set JAVA_ARCH=x86
+if "%ARCH%" == "" (
+	"%JAVA_HOME%\bin\java" -d32 -version 2>NUL
+	if %ERRORLEVEL% EQU 0 set ARCH=x86
 
-"%JAVA_HOME%\bin\java" -d64 -version 2>NUL
-if "%ERRORLEVEL%" == "0" set JAVA_ARCH=x86_64
+	"%JAVA_HOME%\bin\java" -d64 -version 2>NUL
+	if %ERRORLEVEL% EQU 0 set ARCH=x86_64
+)
 
 if "%VS_VERSION%" == "" set VS_VERSION=14
 
-if "%ARCH%" == "" set ARCH=%JAVA_ARCH%
-if "%ARCH%" == "x86" set TARGET_PLATFORM="Visual Studio %VS_VERSION%"
-if "%ARCH%" == "x86_64" set TARGET_PLATFORM="Visual Studio %VS_VERSION% Win64"
+if "%TARGET_PLATFORM%" == "" (
+	if "%ARCH%" == "x86" set TARGET_PLATFORM="Visual Studio %VS_VERSION%"
+	if "%ARCH%" == "x86_64" set TARGET_PLATFORM="Visual Studio %VS_VERSION% Win64"
+)
 
 if "%CMAKE_CONFIG%" == "" set CMAKE_CONFIG=RelWithDebInfo
 
@@ -48,9 +51,11 @@ cd %LIBGIT2_TARGET%
 cmake %LIBGIT2_SRC% -G%TARGET_PLATFORM% ^
  -DTHREADSAFE=ON -DBUILD_CLAR=OFF -DSTDCALL=OFF ^
  %LIBGIT2_CMAKE_FLAGS%
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
 cd %~dp0
 cmake --build %LIBGIT2_TARGET% --config %CMAKE_CONFIG%
-if not "%errorlevel%" == "0" ( goto end )
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
 rem build libjagged
 echo Building libjagged...
@@ -60,9 +65,11 @@ cmake %LIBJAGGED_SRC% -G%TARGET_PLATFORM% ^
  -DINCLUDE_LIBGIT2=%LIBGIT2_SRC%\include ^
  -DLINK_LIBGIT2="%LIBGIT2_TARGET%\%CMAKE_CONFIG%" ^
  %LIBJAGGED_CMAKE_FLAGS%
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
 cd %~dp0
 cmake --build %LIBJAGGED_TARGET% --config %CMAKE_CONFIG%
-if not "%errorlevel%" == "0" ( goto end )
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
 rem build libjagged_test
 echo Building libjagged_test...
@@ -74,9 +81,11 @@ cmake %LIBJAGGED_TEST_SRC% -G%TARGET_PLATFORM% ^
  -DINCLUDE_LIBJAGGED=%LIBJAGGED_SRC% ^
  -DLINK_LIBJAGGED=%LIBJAGGED_TARGET%\%CMAKE_CONFIG% ^
  %LIBJAGGED_TEST_CMAKE_FLAGS%
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
 cd %~dp0
 cmake --build %LIBJAGGED_TEST_TARGET% --config %CMAKE_CONFIG%
-if not "%errorlevel%" == "0" ( goto end )
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
 if not "%1" == "install" ( goto end )
 

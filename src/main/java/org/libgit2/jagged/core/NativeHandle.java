@@ -50,7 +50,7 @@ public final class NativeHandle
      * 
      * @return the handle (never {@code 0})
      */
-    public long dispose()
+    public long close()
     {
         long handle = ptr.getAndSet(0);
 

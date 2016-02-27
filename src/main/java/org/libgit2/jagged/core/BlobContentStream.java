@@ -58,6 +58,6 @@ public class BlobContentStream
     @Override
     public void close()
     {
-        NativeMethods.blobFree(blobHandle.get());
+        NativeMethods.blobFree(blobHandle.close());
     }
 }

@@ -23,6 +23,6 @@ public class BlobFilteredContentStream
     @Override
     public void close()
     {
-        NativeMethods.blobFilteredBufFree(bufHandle.get());
+        NativeMethods.blobFilteredBufFree(bufHandle.close());
     }
 }

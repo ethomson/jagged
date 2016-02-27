@@ -21,7 +21,7 @@ public class CommitTest
 
         Assert.assertEquals(oid, commit.getId());
 
-        repository.dispose();
+        repository.close();
     }
 
     @Test
@@ -36,7 +36,7 @@ public class CommitTest
         Assert.assertEquals("Edward Thomson", commit.getCommitter().getName());
         Assert.assertEquals("ethomson@microsoft.com", commit.getCommitter().getEmail());
 
-        repository.dispose();
+        repository.close();
     }
 
     @Test
@@ -51,7 +51,7 @@ public class CommitTest
         Assert.assertEquals("Edward Thomson", commit.getAuthor().getName());
         Assert.assertEquals("ethomson@microsoft.com", commit.getAuthor().getEmail());
 
-        repository.dispose();
+        repository.close();
     }
 
     @Test
@@ -73,7 +73,7 @@ public class CommitTest
         Assert.assertEquals(parent, parents.next());
         Assert.assertEquals(false, parents.hasNext());
 
-        repository.dispose();
+        repository.close();
     }
 
     @Test
@@ -89,6 +89,6 @@ public class CommitTest
 
         Assert.assertEquals(tree, commit.getTree());
 
-        repository.dispose();
+        repository.close();
     }
 }

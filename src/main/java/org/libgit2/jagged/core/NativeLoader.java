@@ -11,10 +11,24 @@ import org.libgit2.jagged.core.Platform.OperatingSystem;
 public class NativeLoader
 {
     private static String nativeLibraryPath;
+    private static boolean nativeLibraryLoaded = false;
 
+    /**
+     * Sets the native library path programmatically.
+     * This must be called before the first call to {@link #load(String)}.
+     * 
+     * @param libraryPath the path to the native library location (must not be {@code null})
+     */
     public static void setNativeLibraryPath(String libraryPath)
     {
-        NativeLoader.nativeLibraryPath = libraryPath;
+    	Ensure.argumentNotNull(libraryPath, "libraryPath");
+
+    	if (nativeLibraryLoaded)
+    	{
+    		throw new IllegalStateException("Native library path cannot be configured after libraries have been loaded");
+    	}
+
+        nativeLibraryPath = libraryPath;
     }
 
     /**
@@ -72,5 +86,6 @@ public class NativeLoader
         }
 
         System.load(libraryPath.getAbsolutePath());
+        nativeLibraryLoaded = true;
     }
 }

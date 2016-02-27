@@ -1,5 +1,7 @@
 package org.libgit2.jagged;
 
+import java.io.Closeable;
+
 import org.libgit2.jagged.Reference.SymbolicReference;
 import org.libgit2.jagged.core.Ensure;
 import org.libgit2.jagged.core.GitException;
@@ -10,6 +12,7 @@ import org.libgit2.jagged.core.NativeMethods;
  * A Repository is the primary interface to a git repository.
  */
 public class Repository
+    implements Closeable
 {
     private boolean bare;
 
@@ -19,7 +22,7 @@ public class Repository
 
     /**
      * Open an existing on-disk git repository. The returned Repository must be
-     * {@link #dispose()}d.
+     * {@link #close()}d.
      * 
      * @param path
      *        the path to a repository or a working directory
@@ -36,7 +39,7 @@ public class Repository
 
     /**
      * Create a new on-disk git repository. The returned Repository must be
-     * {@link #dispose()}d.
+     * {@link #close()}d.
      * 
      * @param path
      *        the path to the new git repository (for bare repositories) or
@@ -50,7 +53,7 @@ public class Repository
 
     /**
      * Create a new on-disk git repository. The returned Repository must be
-     * {@link #dispose()}d.
+     * {@link #close()}d.
      * 
      * @param path
      *        the path to the new git repository (for bare repositories) or
@@ -69,7 +72,7 @@ public class Repository
 
     /**
      * Clone an existing git repository to a local repository. The returned
-     * Repository must be {@link #dispose()}d.
+     * Repository must be {@link #close()}d.
      * 
      * @param sourceUrl
      *        the path to the existing git repository
@@ -180,7 +183,7 @@ public class Repository
     /**
      * Disposes the underlying Repository object.
      */
-    public void dispose()
+    public void close()
     {
         NativeMethods.repositoryFree(this);
     }

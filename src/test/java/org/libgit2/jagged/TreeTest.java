@@ -21,7 +21,7 @@ public class TreeTest
 
         Assert.assertEquals(oid, tree.getId());
 
-        repository.dispose();
+        repository.close();
     }
 
     @Test
@@ -35,7 +35,7 @@ public class TreeTest
 
         Assert.assertEquals(3, tree.getEntryCount());
 
-        repository.dispose();
+        repository.close();
     }
 
     @Test
@@ -72,7 +72,7 @@ public class TreeTest
 
         Assert.assertFalse(iterator.hasNext());
 
-        repository.dispose();
+        repository.close();
     }
 
     @Test
@@ -105,7 +105,7 @@ public class TreeTest
         Assert.assertEquals(Mode.FILE, entry.getMode());
         Assert.assertEquals(ObjectType.BLOB, entry.getType());
 
-        repository.dispose();
+        repository.close();
     }
 
     @Test

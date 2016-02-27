@@ -16,7 +16,7 @@ public class RepositoryTest
     {
         Repository newRepository = Repository.init(new File(getTempDir(), "repo-init").getAbsolutePath(), true);
         Assert.assertTrue(newRepository.isBare());
-        newRepository.dispose();
+        newRepository.close();
     }
 
     @Test
@@ -24,7 +24,7 @@ public class RepositoryTest
     {
         Repository newRepository = Repository.init(new File(getTempDir(), "repo-init").getAbsolutePath(), false);
         Assert.assertFalse(newRepository.isBare());
-        newRepository.dispose();
+        newRepository.close();
     }
 
     @Test
@@ -61,7 +61,7 @@ public class RepositoryTest
         final File repoPath = setupRepository("testrepo");
 
         Repository repository = new Repository(repoPath.getAbsolutePath());
-        repository.dispose();
+        repository.close();
     }
 
     @Test
@@ -75,8 +75,8 @@ public class RepositoryTest
         Assert.assertTrue(repository.isBare());
         Assert.assertTrue(repository2.isBare());
 
-        repository.dispose();
-        repository2.dispose();
+        repository.close();
+        repository2.close();
     }
 
     @Test
@@ -86,6 +86,6 @@ public class RepositoryTest
 
         Repository repository =
             Repository.clone(repoPath.getAbsolutePath(), new File(getTempDir(), "cloned").getAbsolutePath());
-        repository.dispose();
+        repository.close();
     }
 }

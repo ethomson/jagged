@@ -23,7 +23,7 @@ public class BlobTest
 
         Assert.assertEquals(oid, blob.getId());
 
-        repository.dispose();
+        repository.close();
     }
 
     @Test
@@ -38,7 +38,7 @@ public class BlobTest
         Assert.assertEquals(18, blob.getSize());
         Assert.assertEquals(false, blob.isBinary());
 
-        repository.dispose();
+        repository.close();
     }
 
     @Test
@@ -68,7 +68,7 @@ public class BlobTest
             contentStream.close();
         }
 
-        repository.dispose();
+        repository.close();
     }
 
     @Test
@@ -107,6 +107,6 @@ public class BlobTest
             contentStream.close();
         }
 
-        repository.dispose();
+        repository.close();
     }
 }

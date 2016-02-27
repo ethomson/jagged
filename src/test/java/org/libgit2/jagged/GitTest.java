@@ -22,7 +22,7 @@ public abstract class GitTest
     {
         try
         {
-        	File systemTempDir;
+            File systemTempDir;
 
             resourcesRoot = new File("src/test/resources");
 
@@ -33,15 +33,15 @@ public abstract class GitTest
 
             if (System.getenv("TMPDIR") != null)
             {
-            	systemTempDir = new File(System.getenv("TMPDIR"));
+                systemTempDir = new File(System.getenv("TMPDIR"));
             }
             else if (System.getenv("TEMP") != null)
             {
-            	systemTempDir = new File(System.getenv("TEMP"));
+                systemTempDir = new File(System.getenv("TEMP"));
             }
             else if (System.getProperty("java.io.tmpdir") != null)
             {
-            	systemTempDir = new File(System.getProperty("java.io.tmpdir"));
+                systemTempDir = new File(System.getProperty("java.io.tmpdir"));
             }
             else
             {
@@ -49,27 +49,32 @@ public abstract class GitTest
                     "Unable to determine temporary directory. Please define TMPDIR or TEMP environment variable");
             }
 
-            String classTempDir = "jagged_test_" + Integer.toString((int) (Math.random() * Integer.MAX_VALUE));
+            String classTempDir = "jagged_test_" + getRandomFilename();
+            Integer.toString((int) (Math.random() * Integer.MAX_VALUE));
             tempRoot = new File(systemTempDir, classTempDir);
-            
-        	tempConfigurationDir = new File(tempRoot, "_config");
-        	tempConfigurationDir.mkdir();
+
+            tempConfigurationDir = new File(tempRoot, "_config");
+            tempConfigurationDir.mkdir();
         }
         catch (RuntimeException e)
         {
             e.printStackTrace();
             throw e;
         }
-	}
-    
+    }
+
+    private static String getRandomFilename()
+    {
+        return String.format("%010d", ((int) (Math.random() * Integer.MAX_VALUE)));
+    }
+
     @BeforeClass
     public static void setupTempRoot()
     {
         if (tempRoot.exists())
         {
-            throw new RuntimeException(MessageFormat.format(
-                "Test directory {0} already exists",
-                tempRoot.getAbsolutePath()));
+            throw new RuntimeException(
+                MessageFormat.format("Test directory {0} already exists", tempRoot.getAbsolutePath()));
         }
 
         tempRoot.mkdir();
@@ -85,13 +90,13 @@ public abstract class GitTest
     @Before
     public void setupTempDir()
     {
-    	String tempConfigurationPath = tempConfigurationDir.getAbsolutePath();
+        String tempConfigurationPath = tempConfigurationDir.getAbsolutePath();
         Options.setSearchPath(ConfigurationLevel.SYSTEM, tempConfigurationPath);
-        Options.setSearchPath(ConfigurationLevel.XDG,tempConfigurationPath);
+        Options.setSearchPath(ConfigurationLevel.XDG, tempConfigurationPath);
         Options.setSearchPath(ConfigurationLevel.GLOBAL, tempConfigurationPath);
 
-    	String instanceTempDir = Integer.toString((int) (Math.random() * Integer.MAX_VALUE));
-        tempDir = new File(tempRoot, instanceTempDir);        
+        String instanceTempDir = getRandomFilename();
+        tempDir = new File(tempRoot, instanceTempDir);
         tempDir.mkdir();
     }
 

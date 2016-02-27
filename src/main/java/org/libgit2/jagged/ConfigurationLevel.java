@@ -6,8 +6,8 @@ package org.libgit2.jagged;
  */
 public enum ConfigurationLevel
 {
-	/** System-wide configuration on Windows, for compatibility with portable git. */
-	PROGRAMDATA(1),
+    /** System-wide configuration on Windows */
+    PROGRAMDATA(1),
 
     /** The system-wide configuration */
     SYSTEM(2),

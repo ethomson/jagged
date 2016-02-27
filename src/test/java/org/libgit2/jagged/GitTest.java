@@ -7,18 +7,23 @@ import java.nio.channels.FileChannel;
 import java.text.MessageFormat;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 
 public abstract class GitTest
 {
     private static File resourcesRoot;
     private static File tempRoot;
     private static File tempDir;
+    private static File tempConfigurationDir;
 
     static
     {
         try
         {
+        	File systemTempDir;
+
             resourcesRoot = new File("src/test/resources");
 
             if (!resourcesRoot.exists())
@@ -28,15 +33,15 @@ public abstract class GitTest
 
             if (System.getenv("TMPDIR") != null)
             {
-                tempRoot = new File(System.getenv("TMPDIR"));
+            	systemTempDir = new File(System.getenv("TMPDIR"));
             }
             else if (System.getenv("TEMP") != null)
             {
-                tempRoot = new File(System.getenv("TEMP"));
+            	systemTempDir = new File(System.getenv("TEMP"));
             }
             else if (System.getProperty("java.io.tmpdir") != null)
             {
-                tempRoot = new File(System.getProperty("java.io.tmpdir"));
+            	systemTempDir = new File(System.getProperty("java.io.tmpdir"));
             }
             else
             {
@@ -44,28 +49,57 @@ public abstract class GitTest
                     "Unable to determine temporary directory. Please define TMPDIR or TEMP environment variable");
             }
 
-            String instanceTempDir = "jagged_test_" + Integer.toString((int) (Math.random() * Integer.MAX_VALUE));
-            tempDir = new File(tempRoot, instanceTempDir);
-
+            String classTempDir = "jagged_test_" + Integer.toString((int) (Math.random() * Integer.MAX_VALUE));
+            tempRoot = new File(systemTempDir, classTempDir);
+            
+        	tempConfigurationDir = new File(tempRoot, "_config");
+        	tempConfigurationDir.mkdir();
         }
         catch (RuntimeException e)
         {
             e.printStackTrace();
             throw e;
         }
+	}
+    
+    @BeforeClass
+    public static void setupTempRoot()
+    {
+        if (tempRoot.exists())
+        {
+            throw new RuntimeException(MessageFormat.format(
+                "Test directory {0} already exists",
+                tempRoot.getAbsolutePath()));
+        }
+
+        tempRoot.mkdir();
+    }
+
+    @AfterClass
+    public static void cleanupTempRoot()
+    {
+        cleanupDirectory(tempRoot);
+        tempRoot.delete();
     }
 
     @Before
     public void setupTempDir()
     {
-        if (tempDir.exists())
-        {
-            throw new RuntimeException(MessageFormat.format(
-                "Test directory {0} already exists",
-                tempDir.getAbsolutePath()));
-        }
+    	String tempConfigurationPath = tempConfigurationDir.getAbsolutePath();
+        Options.setSearchPath(ConfigurationLevel.SYSTEM, tempConfigurationPath);
+        Options.setSearchPath(ConfigurationLevel.XDG,tempConfigurationPath);
+        Options.setSearchPath(ConfigurationLevel.GLOBAL, tempConfigurationPath);
 
+    	String instanceTempDir = Integer.toString((int) (Math.random() * Integer.MAX_VALUE));
+        tempDir = new File(tempRoot, instanceTempDir);        
         tempDir.mkdir();
+    }
+
+    @After
+    public void cleanupTempDir()
+    {
+        cleanupDirectory(tempDir);
+        tempDir.delete();
     }
 
     public File getTempDir()
@@ -87,13 +121,6 @@ public abstract class GitTest
                 child.delete();
             }
         }
-    }
-
-    @After
-    public void cleanupTempDir()
-    {
-        cleanupDirectory(tempDir);
-        tempDir.delete();
     }
 
     private static File copyRecursive(final File source, final File target, final String item)

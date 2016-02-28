@@ -15,8 +15,8 @@ if "%ARCH%" == "" (
 if "%VS_VERSION%" == "" set VS_VERSION=14
 
 if "%TARGET_PLATFORM%" == "" (
-	if "%ARCH%" == "x86" set TARGET_PLATFORM="Visual Studio %VS_VERSION%"
-	if "%ARCH%" == "x86_64" set TARGET_PLATFORM="Visual Studio %VS_VERSION% Win64"
+	if "%ARCH%" == "x86" set "TARGET_PLATFORM=Visual Studio %VS_VERSION%"
+	if "%ARCH%" == "x86_64" set "TARGET_PLATFORM=Visual Studio %VS_VERSION% Win64"
 )
 
 if "%CMAKE_CONFIG%" == "" set CMAKE_CONFIG=RelWithDebInfo
@@ -48,7 +48,7 @@ rem build libgit2
 echo Building libgit2...
 if not exist %LIBGIT2_TARGET% ( mkdir %LIBGIT2_TARGET% )
 cd %LIBGIT2_TARGET%
-cmake %LIBGIT2_SRC% -G%TARGET_PLATFORM% ^
+cmake %LIBGIT2_SRC% "-G%TARGET_PLATFORM%" ^
  -DTHREADSAFE=ON -DBUILD_CLAR=OFF -DSTDCALL=OFF ^
  %LIBGIT2_CMAKE_FLAGS%
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
@@ -61,7 +61,7 @@ rem build libjagged
 echo Building libjagged...
 if not exist %LIBJAGGED_TARGET% ( mkdir %LIBJAGGED_TARGET% )
 cd %LIBJAGGED_TARGET%
-cmake %LIBJAGGED_SRC% -G%TARGET_PLATFORM% ^
+cmake %LIBJAGGED_SRC% "-G%TARGET_PLATFORM%" ^
  -DINCLUDE_LIBGIT2=%LIBGIT2_SRC%\include ^
  -DLINK_LIBGIT2="%LIBGIT2_TARGET%\%CMAKE_CONFIG%" ^
  %LIBJAGGED_CMAKE_FLAGS%
@@ -75,7 +75,7 @@ rem build libjagged_test
 echo Building libjagged_test...
 if not exist %LIBJAGGED_TEST_TARGET% ( mkdir %LIBJAGGED_TEST_TARGET% )
 cd %LIBJAGGED_TEST_TARGET%
-cmake %LIBJAGGED_TEST_SRC% -G%TARGET_PLATFORM% ^
+cmake %LIBJAGGED_TEST_SRC% "-G%TARGET_PLATFORM%" ^
  -DINCLUDE_LIBGIT2=%LIBGIT2_SRC%\include ^
  -DLINK_LIBGIT2=%LIBGIT2_TARGET%\%CMAKE_CONFIG% ^
  -DINCLUDE_LIBJAGGED=%LIBJAGGED_SRC% ^

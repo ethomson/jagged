@@ -34,10 +34,12 @@
 
 #ifdef _WIN32
 typedef WCHAR native_char;
-
-typedef SSIZE_T ssize_t;
 #else
 typedef char native_char;
+#endif
+
+#if defined(GIT_WIN32) && !defined(__MINGW32__)
+typedef SSIZE_T ssize_t;
 #endif
 
 GIT_INLINE(jstring) git_java_utf8_to_jstring(
@@ -51,7 +53,7 @@ GIT_INLINE(jstring) git_java_native_to_jstring(
 	JNIEnv *env,
 	const native_char *nativestr)
 {
-#if defined(_WIN32)
+#if defined(GIT_WIN32) && !defined(__MINGW32__)
 	size_t len;
 
 	if (FAILED(StringCchLength(nativestr, STRSAFE_MAX_CCH, &len)))
@@ -64,6 +66,9 @@ GIT_INLINE(jstring) git_java_native_to_jstring(
 	 * strsafe.h says: "The user may override STRSAFE_MAX_CCH, but it must
 	 * always be less than INT_MAX"
 	*/
+	return (*env)->NewString(env, nativestr, (jsize) len);
+#elif defined(_WIN32)
+	size_t len = wcslen(nativestr);
 	return (*env)->NewString(env, nativestr, (jsize) len);
 #else
 	return (*env)->NewStringUTF(env, nativestr);

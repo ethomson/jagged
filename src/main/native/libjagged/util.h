@@ -14,6 +14,8 @@
 
 #include <git2.h>
 
+#include "jniutil.h"
+
 #define GIT_UNUSED(x) ((void)(x))
 
 #ifdef _MSC_VER

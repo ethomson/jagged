@@ -16,7 +16,7 @@ public class TreeTest
         final File repoPath = setupRepository("testrepo");
         Repository repository = new Repository(repoPath.getAbsolutePath());
 
-        ObjectId oid = new ObjectId("e77ab1c63f3fbde9c5ef9972939aa0717012d7c0");
+        ObjectId oid = new ObjectId("ff77323c5557be69500eb91efa418074fd3f0443");
         Tree tree = repository.lookup(oid);
 
         Assert.assertEquals(oid, tree.getId());
@@ -30,10 +30,10 @@ public class TreeTest
         final File repoPath = setupRepository("testrepo");
         Repository repository = new Repository(repoPath.getAbsolutePath());
 
-        ObjectId oid = new ObjectId("e77ab1c63f3fbde9c5ef9972939aa0717012d7c0");
+        ObjectId oid = new ObjectId("ff77323c5557be69500eb91efa418074fd3f0443");
         Tree tree = repository.lookup(oid);
 
-        Assert.assertEquals(3, tree.getEntryCount());
+        Assert.assertEquals(5, tree.getEntryCount());
 
         repository.close();
     }
@@ -44,12 +44,26 @@ public class TreeTest
         final File repoPath = setupRepository("testrepo");
         Repository repository = new Repository(repoPath.getAbsolutePath());
 
-        ObjectId oid = new ObjectId("e77ab1c63f3fbde9c5ef9972939aa0717012d7c0");
+        ObjectId oid = new ObjectId("ff77323c5557be69500eb91efa418074fd3f0443");
         Tree tree = repository.lookup(oid);
 
         Iterator<TreeEntry> iterator = tree.getEntries().iterator();
 
         TreeEntry entry = iterator.next();
+
+        Assert.assertEquals(".gitattributes", entry.getName());
+        Assert.assertEquals(new ObjectId("176a458f94e0ea5272ce67c36bf30b6be9caf623"), entry.getId());
+        Assert.assertEquals(Mode.FILE, entry.getMode());
+        Assert.assertEquals(ObjectType.BLOB, entry.getType());
+
+        entry = iterator.next();
+
+        Assert.assertEquals("a", entry.getName());
+        Assert.assertEquals(new ObjectId("32ef2016c46507680e32272204b1095cdf232f5d"), entry.getId());
+        Assert.assertEquals(Mode.TREE, entry.getMode());
+        Assert.assertEquals(ObjectType.TREE, entry.getType());
+
+        entry = iterator.next();
 
         Assert.assertEquals("one.txt", entry.getName());
         Assert.assertEquals(new ObjectId("d1796967d47949153bb852c07304d9e5f2f0040c"), entry.getId());
@@ -81,7 +95,7 @@ public class TreeTest
         final File repoPath = setupRepository("testrepo");
         Repository repository = new Repository(repoPath.getAbsolutePath());
 
-        ObjectId oid = new ObjectId("e77ab1c63f3fbde9c5ef9972939aa0717012d7c0");
+        ObjectId oid = new ObjectId("ff77323c5557be69500eb91efa418074fd3f0443");
         Tree tree = repository.lookup(oid);
 
         TreeEntry entry = tree.getEntry("one.txt");
@@ -114,7 +128,7 @@ public class TreeTest
         final File repoPath = setupRepository("testrepo");
         Repository repository = new Repository(repoPath.getAbsolutePath());
 
-        ObjectId oid = new ObjectId("e77ab1c63f3fbde9c5ef9972939aa0717012d7c0");
+        ObjectId oid = new ObjectId("ff77323c5557be69500eb91efa418074fd3f0443");
         Tree tree = repository.lookup(oid);
 
         TreeEntry entry = tree.getEntry("one.txt");

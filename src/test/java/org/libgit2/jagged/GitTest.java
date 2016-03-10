@@ -1,19 +1,21 @@
 package org.libgit2.jagged;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.nio.channels.FileChannel;
 import java.text.MessageFormat;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.libgit2.jagged.core.NativeTestMethods;
 
 public abstract class GitTest
 {
-    private static File resourcesRoot;
+    public static String FIRST_COMMIT_ID = "de6e275694ca4b8850f380650cf6e4e26169d15f";
+    public static String SECOND_COMMIT_ID = "3dcee60faede7e1acf6058345a29748ae31f74bc";
+    public static String AUTHOR_NAME = "T. E. Ster";
+    public static String AUTHOR_EMAIL = "tester@domain.com";
+
     private static File tempRoot;
     private static File tempDir;
     private static File tempConfigurationDir;
@@ -23,13 +25,6 @@ public abstract class GitTest
         try
         {
             File systemTempDir;
-
-            resourcesRoot = new File("src/test/resources");
-
-            if (!resourcesRoot.exists())
-            {
-                resourcesRoot = new File(GitTest.class.getResource("/testrepo").getFile()).getParentFile();
-            }
 
             if (System.getenv("TMPDIR") != null)
             {
@@ -128,48 +123,10 @@ public abstract class GitTest
         }
     }
 
-    private static File copyRecursive(final File source, final File target, final String item)
-    {
-        final String sourceItem = item;
-        final String targetItem = (item.equals(".gitted") ? ".git" : item);
-
-        final File sourceFile = new File(source, sourceItem);
-        final File targetFile = new File(target, targetItem);
-
-        if (sourceFile.isDirectory())
-        {
-            targetFile.mkdir();
-
-            for (String child : sourceFile.list())
-            {
-                copyRecursive(sourceFile, targetFile, child);
-            }
-
-            return targetFile;
-        }
-        else
-        {
-            try
-            {
-                @SuppressWarnings("resource")
-                FileChannel sourceChannel = new FileInputStream(sourceFile).getChannel();
-                @SuppressWarnings("resource")
-                FileChannel targetChannel = new FileOutputStream(targetFile).getChannel();
-                targetChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
-                sourceChannel.close();
-                targetChannel.close();
-
-                return targetFile;
-            }
-            catch (Exception e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
     public File setupRepository(final String name)
     {
-        return copyRecursive(resourcesRoot, tempDir, name);
+        File path = new File(tempDir, name);
+        NativeTestMethods.createTestRepository(path.getAbsolutePath().replace("\\", "/"), new Signature(AUTHOR_NAME, AUTHOR_EMAIL));
+        return path;
     }
 }

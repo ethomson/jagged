@@ -10,9 +10,11 @@ import org.libgit2.jagged.Options;
 import org.libgit2.jagged.Reference;
 import org.libgit2.jagged.Reference.DirectReference;
 import org.libgit2.jagged.Repository;
+import org.libgit2.jagged.status.Status;
 import org.libgit2.jagged.Tree;
 import org.libgit2.jagged.TreeEntry;
 import org.libgit2.jagged.Version;
+import org.libgit2.jagged.status.StatusOptions;
 
 public class NativeMethods
 {
@@ -128,4 +130,12 @@ public class NativeMethods
     public static native void repositoryOpen(Repository repository, String path);
 
     public static native boolean repositoryIsBare(Repository repository);
+
+    /*
+     * Status operations
+     */
+
+    public static native StatusOptions statusOptionsInit();
+
+    public static native Status[] statusListNew(Repository repository, StatusOptions options, boolean populateOids);
 }

@@ -12,6 +12,8 @@ public final class ObjectId
     public final static int SIZE = 20;
     public final static int HEX_SIZE = 40;
 
+    public static final ObjectId NULL = new ObjectId("0000000000000000000000000000000000000000");
+
     private final byte[] oid;
     private final String hex;
 

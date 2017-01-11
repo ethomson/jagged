@@ -64,7 +64,99 @@
                     <excludePackageNames>org.libgit2.jagged.core:org.libgit2.jagged.core.*</excludePackageNames>
                 </configuration>
             </plugin>
+
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>properties-maven-plugin</artifactId>
+              <version>1.0-alpha-1</version>
+              <executions>
+                <execution>
+                  <phase>initialize</phase>
+                  <goals>
+                    <goal>read-project-properties</goal>
+                  </goals>
+                  <configuration>
+                    <files>
+                      <file>${basedir}/build.properties</file>
+                    </files>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>clean-native</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <target>
+                                <echo message="${basedir}/native"/>
+                                <delete dir="${basedir}/native"/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>compile-native.windows</id>
+                                <phase>compile</phase>
+                                <configuration>
+                                    <target>
+                                        <exec command="make.cmd" failonerror="true">
+                                            <env key="ARCH" value="x86"/>
+                                            <env key="TARGET_PLATFORM" value="${make.targetPlatform}"/>
+                                            <env key="LIBJAGGED_CMAKE_FLAGS" value="-DUSE_SDL=OFF"/>
+                                            <env key="LIBJAGGED_TEST_CMAKE_FLAGS" value="-DUSE_SDL=OFF"/>
+                                        </exec>
+                                        <delete dir="native/win32/x86"/>
+                                        <mkdir dir="native/win32/x86"/>
+                                        <copy file="target/native/libgit2/x86/RelWithDebInfo/git2.dll" todir="native/win32/x86"/>
+                                        <copy file="target/native/libjagged/x86/RelWithDebInfo/jagged.dll" todir="native/win32/x86"/>
+
+                                        <exec command="make.cmd" failonerror="true">
+                                            <env key="ARCH" value="x86_64"/>
+                                            <env key="TARGET_PLATFORM" value="${make.targetPlatform} Win64"/>
+                                            <env key="LIBJAGGED_CMAKE_FLAGS" value="-DUSE_SDL=OFF"/>
+                                            <env key="LIBJAGGED_TEST_CMAKE_FLAGS" value="-DUSE_SDL=OFF"/>
+                                        </exec>
+                                        <delete dir="native/win32/x86_64"/>
+                                        <mkdir dir="native/win32/x86_64"/>
+                                        <copy file="target/native/libgit2/x86_64/RelWithDebInfo/git2.dll" todir="native/win32/x86_64"/>
+                                        <copy file="target/native/libjagged/x86_64/RelWithDebInfo/jagged.dll" todir="native/win32/x86_64"/>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
 

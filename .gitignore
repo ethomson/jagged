@@ -3,3 +3,4 @@
 .settings/
 target/
 /native/
+build.properties

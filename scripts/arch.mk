@@ -35,16 +35,3 @@ else
 	ARCH_PATH=$(OS)/$(ARCH)
 endif
 
-# Create quad-fat binaries on Mac OS
-ifeq ($(OS),macosx)
-	ARCH_CFLAGS=-arch i386 -arch x86_64
-
-	ifeq ($(ARCH),ppc)
-		ARCH_CFLAGS+=-arch ppc
-	endif
-
-	ifeq ($(ARCH),ppc64)
-		ARCH_CFLAGS+=-arch ppc -arch ppc64
-	endif
-endif
-

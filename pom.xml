@@ -3,18 +3,23 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.libgit2.jagged</groupId>
-    <artifactId>org.libgit2.jagged</artifactId>
-    <version>0.0.1.0</version>
+    <groupId>org.libgit2</groupId>
+    <artifactId>jagged</artifactId>
+    <version>0.0.2</version>
     <name>org.libgit2.jagged</name>
 
     <properties>
-      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-      <jdk.version>1.8</jdk.version>
-      <maven.compiler.source>${jdk.version}</maven.compiler.source>
-      <maven.compiler.target>${jdk.version}</maven.compiler.target>
-
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jdk.version>1.8</jdk.version>
+        <maven.compiler.source>${jdk.version}</maven.compiler.source>
+        <maven.compiler.target>${jdk.version}</maven.compiler.target>
     </properties>
+
+    <scm>
+        <connection>scm:git:https://github.com/ethomson/jagged.git</connection>
+        <url>scm:git:https://github.com/ethomson/jagged/tree/${project.scm.tag}</url>
+        <tag>master</tag>
+    </scm>
 
     <dependencies>
         <dependency>
@@ -61,7 +66,37 @@
                     <excludePackageNames>org.libgit2.jagged.core:org.libgit2.jagged.core.*</excludePackageNames>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <configuration>
+                    <buildNumberPropertyName>buildNumber</buildNumberPropertyName>
+                    <format>{0,date,yyyyMMddHHmm}</format>
+                    <items>
+                        <item>timestamp</item>
+                    </items>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+
+        <finalName>${project.artifactId}-${project.version}-${buildNumber}</finalName>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/ethomson/jagged</url>
+        </repository>
+    </distributionManagement>
 </project>
 

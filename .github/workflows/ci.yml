@@ -26,4 +26,7 @@ jobs:
     - name: Build Jagged
       run: mvn -B package
     - name: Upload to GitHub Packages
-      run: mvn deploy -Dgithub.username=${{github.actor}} -Dgithub.password=${{github.token}} -s settings.xml
+      run: mvn deploy
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      if: github.event_name == 'push' && github.ref == 'master'

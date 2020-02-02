@@ -24,9 +24,8 @@ jobs:
     - name: Build libgit2
       run: make install
     - name: Build Jagged
-      run: mvn -B package
+      run: gradle build
     - name: Upload to GitHub Packages
-      run: mvn deploy
+      run: gradle publish
       env:
         GITHUB_TOKEN: ${{ github.token }}
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'

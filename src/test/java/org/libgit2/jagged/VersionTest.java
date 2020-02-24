@@ -13,7 +13,7 @@ public class VersionTest
 
         Assert.assertEquals(0, jaggedVersion.getMajor());
         Assert.assertEquals(0, jaggedVersion.getMinor());
-        Assert.assertEquals(1, jaggedVersion.getRevision());
+        Assert.assertEquals(8, jaggedVersion.getRevision());
     }
 
     @Test

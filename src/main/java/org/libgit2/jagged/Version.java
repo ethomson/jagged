@@ -11,7 +11,7 @@ import org.libgit2.jagged.core.NativeMethods;
  */
 public class Version
 {
-    private static final Version version = new Version(0, 0, 1);
+    private static final Version version = new Version(0, 0, 8);
 
     private static final Lazy<Version> libGit2Version = new Lazy<Version>()
     {

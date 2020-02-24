@@ -106,7 +106,6 @@ Java_org_libgit2_jagged_core_NativeMethods_optionSetSearchPath(
 	jstring path_java)
 {
 	const char *path = NULL;
-	git_buf buf = {0};
 	int error = 0;
 
 	GIT_UNUSED(class);

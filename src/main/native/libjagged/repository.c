@@ -132,7 +132,6 @@ Java_org_libgit2_jagged_core_NativeMethods_repositoryIsBare(
 	jobject repo_java)
 {
 	git_repository *repo;
-	git_reference *ref = NULL;
 	int is_bare;
 
 	assert(env);

@@ -1,5 +1,7 @@
 package org.libgit2.jagged.core;
 
+import org.libgit2.jagged.Signature;
+
 public class NativeTestMethods
 {
     static
@@ -20,4 +22,6 @@ public class NativeTestMethods
     public static native void throwFormattedString2();
 
     public static native void throwFormattedString3();
+
+    public static native void createTestRepository(String path, Signature signature);
 }

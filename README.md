@@ -3,6 +3,8 @@
 [![Travis CI Status](https://api.travis-ci.org/ethomson/jagged.svg?branch=master)](https://travis-ci.org/ethomson/jagged/branches)
 [![Appveyor CI Status](https://ci.appveyor.com/api/projects/status/4fovdup3mva9rkff/branch/master?svg=true)](https://ci.appveyor.com/project/ethomsonbot/jagged/branch/master)
 
+[![CI](https://github.com/ethomson/jagged/workflows/CI/badge.svg?branch=main&event=push)](https://github.com/ethomson/jagged/actions?query=event%3Apush+branch%3Amain+workflow%3ACI)
+
 jagged provides Java language bindings to [libgit2][0], a native Git
 implementation.
 

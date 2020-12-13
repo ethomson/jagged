@@ -45,7 +45,21 @@ public class ReferenceTest
     {
         final String[] expected = new String[]
         {
-            "refs/heads/master"
+            "refs/heads/br2",
+            "refs/heads/dir",
+            "refs/heads/ident",
+            "refs/heads/long-file-name",
+            "refs/heads/master",
+            "refs/heads/packed-test",
+            "refs/heads/subtrees",
+            "refs/heads/test",
+            "refs/tags/e90810b",
+            "refs/tags/foo/bar",
+            "refs/tags/foo/foo/bar",
+            "refs/tags/point_to_blob",
+            "refs/tags/test",
+            "refs/heads/packed",
+            "refs/tags/packed-tag"
         };
         Repository repository = new Repository(setupRepository("testrepo").getAbsolutePath());
 

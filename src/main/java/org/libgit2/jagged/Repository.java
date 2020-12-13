@@ -7,6 +7,8 @@ import org.libgit2.jagged.core.Ensure;
 import org.libgit2.jagged.core.GitException;
 import org.libgit2.jagged.core.NativeHandle;
 import org.libgit2.jagged.core.NativeMethods;
+import org.libgit2.jagged.status.Status;
+import org.libgit2.jagged.status.StatusOptions;
 
 /**
  * A Repository is the primary interface to a git repository.
@@ -178,6 +180,11 @@ public class Repository
         }
 
         return new DetachedHead(this, reference);
+    }
+
+    public Status[] statusListNew(StatusOptions options, boolean populateOids)
+    {
+        return NativeMethods.statusListNew(this, options, populateOids);
     }
 
     /**

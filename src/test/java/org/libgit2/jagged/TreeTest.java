@@ -16,7 +16,7 @@ public class TreeTest
         final File repoPath = setupRepository("testrepo");
         Repository repository = new Repository(repoPath.getAbsolutePath());
 
-        ObjectId oid = new ObjectId("e77ab1c63f3fbde9c5ef9972939aa0717012d7c0");
+        ObjectId oid = new ObjectId(C8_ROOT);
         Tree tree = repository.lookup(oid);
 
         Assert.assertEquals(oid, tree.getId());
@@ -30,10 +30,10 @@ public class TreeTest
         final File repoPath = setupRepository("testrepo");
         Repository repository = new Repository(repoPath.getAbsolutePath());
 
-        ObjectId oid = new ObjectId("e77ab1c63f3fbde9c5ef9972939aa0717012d7c0");
+        ObjectId oid = new ObjectId(C8_ROOT);
         Tree tree = repository.lookup(oid);
 
-        Assert.assertEquals(3, tree.getEntryCount());
+        Assert.assertEquals(4, tree.getEntryCount());
 
         repository.close();
     }
@@ -44,29 +44,36 @@ public class TreeTest
         final File repoPath = setupRepository("testrepo");
         Repository repository = new Repository(repoPath.getAbsolutePath());
 
-        ObjectId oid = new ObjectId("e77ab1c63f3fbde9c5ef9972939aa0717012d7c0");
+        ObjectId oid = new ObjectId(C8_ROOT);
         Tree tree = repository.lookup(oid);
 
         Iterator<TreeEntry> iterator = tree.getEntries().iterator();
 
         TreeEntry entry = iterator.next();
 
-        Assert.assertEquals("one.txt", entry.getName());
-        Assert.assertEquals(new ObjectId("d1796967d47949153bb852c07304d9e5f2f0040c"), entry.getId());
+        Assert.assertEquals("README", entry.getName());
+        Assert.assertEquals(new ObjectId("a8233120f6ad708f843d861ce2b7228ec4e3dec6"), entry.getId());
         Assert.assertEquals(Mode.FILE, entry.getMode());
         Assert.assertEquals(ObjectType.BLOB, entry.getType());
 
         entry = iterator.next();
 
-        Assert.assertEquals("three.txt", entry.getName());
-        Assert.assertEquals(new ObjectId("8fbe49af0d14c65f881b57709acae2ea3414089a"), entry.getId());
+        Assert.assertEquals("branch_file.txt", entry.getName());
+        Assert.assertEquals(new ObjectId("3697d64be941a53d4ae8f6a271e4e3fa56b022cc"), entry.getId());
         Assert.assertEquals(Mode.FILE, entry.getMode());
         Assert.assertEquals(ObjectType.BLOB, entry.getType());
 
         entry = iterator.next();
 
-        Assert.assertEquals("two.txt", entry.getName());
-        Assert.assertEquals(new ObjectId("dc48b6c38e967e57965e36c6f7a1c3ec5c3e1ff4"), entry.getId());
+        Assert.assertEquals("link_to_new.txt", entry.getName());
+        Assert.assertEquals(new ObjectId("c0528fd6cc988c0a40ce0be11bc192fc8dc5346e"), entry.getId());
+        Assert.assertEquals(Mode.LINK, entry.getMode());
+        Assert.assertEquals(ObjectType.BLOB, entry.getType());
+
+        entry = iterator.next();
+
+        Assert.assertEquals("new.txt", entry.getName());
+        Assert.assertEquals(new ObjectId("a71586c1dfe8a71c6cbf6c129f404c5642ff31bd"), entry.getId());
         Assert.assertEquals(Mode.FILE, entry.getMode());
         Assert.assertEquals(ObjectType.BLOB, entry.getType());
 
@@ -81,27 +88,13 @@ public class TreeTest
         final File repoPath = setupRepository("testrepo");
         Repository repository = new Repository(repoPath.getAbsolutePath());
 
-        ObjectId oid = new ObjectId("e77ab1c63f3fbde9c5ef9972939aa0717012d7c0");
+        ObjectId oid = new ObjectId(C8_ROOT);
         Tree tree = repository.lookup(oid);
 
-        TreeEntry entry = tree.getEntry("one.txt");
+        TreeEntry entry = tree.getEntry(README);
 
-        Assert.assertEquals("one.txt", entry.getName());
-        Assert.assertEquals(new ObjectId("d1796967d47949153bb852c07304d9e5f2f0040c"), entry.getId());
-        Assert.assertEquals(Mode.FILE, entry.getMode());
-        Assert.assertEquals(ObjectType.BLOB, entry.getType());
-
-        entry = tree.getEntry("two.txt");
-
-        Assert.assertEquals("two.txt", entry.getName());
-        Assert.assertEquals(new ObjectId("dc48b6c38e967e57965e36c6f7a1c3ec5c3e1ff4"), entry.getId());
-        Assert.assertEquals(Mode.FILE, entry.getMode());
-        Assert.assertEquals(ObjectType.BLOB, entry.getType());
-
-        entry = tree.getEntry("three.txt");
-
-        Assert.assertEquals("three.txt", entry.getName());
-        Assert.assertEquals(new ObjectId("8fbe49af0d14c65f881b57709acae2ea3414089a"), entry.getId());
+        Assert.assertEquals(README, entry.getName());
+        Assert.assertEquals(new ObjectId(C8_README), entry.getId());
         Assert.assertEquals(Mode.FILE, entry.getMode());
         Assert.assertEquals(ObjectType.BLOB, entry.getType());
 
@@ -114,12 +107,12 @@ public class TreeTest
         final File repoPath = setupRepository("testrepo");
         Repository repository = new Repository(repoPath.getAbsolutePath());
 
-        ObjectId oid = new ObjectId("e77ab1c63f3fbde9c5ef9972939aa0717012d7c0");
+        ObjectId oid = new ObjectId(C8_ROOT);
         Tree tree = repository.lookup(oid);
 
-        TreeEntry entry = tree.getEntry("one.txt");
+        TreeEntry entry = tree.getEntry(README);
         Blob blob = entry.realize();
 
-        Assert.assertEquals(new ObjectId("d1796967d47949153bb852c07304d9e5f2f0040c"), blob.getId());
+        Assert.assertEquals(new ObjectId(C8_README), blob.getId());
     }
 }

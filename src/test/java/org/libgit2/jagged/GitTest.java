@@ -3,6 +3,8 @@ package org.libgit2.jagged;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.text.MessageFormat;
 
@@ -13,7 +15,17 @@ import org.junit.BeforeClass;
 
 public abstract class GitTest
 {
-    private static File resourcesRoot;
+    public static String README = "README";
+    public static String C1 = "8496071c1b46c854b31185ea97743be6a8774479";
+    public static String C1_ROOT = "181037049a54a1eb5fab404658a3a250b44335d7";
+    public static String C1_README = "1385f264afb75a56a5bec74243be9b367ba4ca08";
+
+    public static String C2 = "5b5b025afb0b4c913b4c338a42934a3863bf3644";
+
+    public static String C8_ROOT = "45dd856fdd4d89b884c340ba0e047752d9b085d6";
+    public static String C8_README = "a8233120f6ad708f843d861ce2b7228ec4e3dec6";
+
+    private static File testRepositoriesRoot;
     private static File tempRoot;
     private static File tempDir;
     private static File tempConfigurationDir;
@@ -24,11 +36,10 @@ public abstract class GitTest
         {
             File systemTempDir;
 
-            resourcesRoot = new File("src/test/resources");
-
-            if (!resourcesRoot.exists())
+            testRepositoriesRoot = new File("src/main/native/libgit2/tests/resources");
+            if (!testRepositoriesRoot.exists())
             {
-                resourcesRoot = new File(GitTest.class.getResource("/testrepo").getFile()).getParentFile();
+                throw new RuntimeException("Can't find test resources at " + testRepositoriesRoot.getAbsolutePath());
             }
 
             if (System.getenv("TMPDIR") != null)
@@ -112,6 +123,18 @@ public abstract class GitTest
         return tempDir;
     }
 
+    public void write(File file, String content) throws IOException
+    {
+        FileWriter writer = new FileWriter(file);
+        try
+        {
+            writer.write(content);
+        } finally
+        {
+            writer.close();
+        }
+    }
+
     private static void cleanupDirectory(final File file)
     {
         if (file.isDirectory())
@@ -170,6 +193,6 @@ public abstract class GitTest
 
     public File setupRepository(final String name)
     {
-        return copyRecursive(resourcesRoot, tempDir, name);
+        return copyRecursive(testRepositoriesRoot, tempDir, name);
     }
 }

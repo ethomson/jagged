@@ -18,7 +18,7 @@ public class BlobTest
         final File repoPath = setupRepository("testrepo");
         Repository repository = new Repository(repoPath.getAbsolutePath());
 
-        ObjectId oid = new ObjectId("dc48b6c38e967e57965e36c6f7a1c3ec5c3e1ff4");
+        ObjectId oid = new ObjectId(C1_README);
         Blob blob = repository.lookup(oid);
 
         Assert.assertEquals(oid, blob.getId());
@@ -32,10 +32,10 @@ public class BlobTest
         final File repoPath = setupRepository("testrepo");
         Repository repository = new Repository(repoPath.getAbsolutePath());
 
-        ObjectId oid = new ObjectId("dc48b6c38e967e57965e36c6f7a1c3ec5c3e1ff4");
+        ObjectId oid = new ObjectId(C1_README);
         Blob blob = repository.lookup(oid);
 
-        Assert.assertEquals(18, blob.getSize());
+        Assert.assertEquals(4, blob.getSize());
         Assert.assertEquals(false, blob.isBinary());
 
         repository.close();
@@ -45,12 +45,14 @@ public class BlobTest
     public void testGetRawContent()
         throws IOException
     {
-        byte[] expected = "This is file two!\n".getBytes();
+        byte[] expected = "hey\n".getBytes();
 
         final File repoPath = setupRepository("testrepo");
+        write(new File(repoPath, ".gitattributes"), "* text");
+
         Repository repository = new Repository(repoPath.getAbsolutePath());
 
-        ObjectId oid = new ObjectId("dc48b6c38e967e57965e36c6f7a1c3ec5c3e1ff4");
+        ObjectId oid = new ObjectId(C1_README);
         Blob blob = repository.lookup(oid);
 
         InputStream contentStream = blob.getContentStream();
@@ -79,17 +81,19 @@ public class BlobTest
 
         if (Platform.getCurrentPlatform().getOperatingSystem().equals(OperatingSystem.WINDOWS))
         {
-            expected = "This is file two!\r\n".getBytes();
+            expected = "hey\r\n".getBytes();
         }
         else
         {
-            expected = "This is file two!\n".getBytes();
+            expected = "hey\n".getBytes();
         }
 
         final File repoPath = setupRepository("testrepo");
+        write(new File(repoPath, ".gitattributes"), "* text");
+
         Repository repository = new Repository(repoPath.getAbsolutePath());
 
-        ObjectId oid = new ObjectId("dc48b6c38e967e57965e36c6f7a1c3ec5c3e1ff4");
+        ObjectId oid = new ObjectId(C1_README);
         Blob blob = repository.lookup(oid);
 
         InputStream contentStream = blob.getContentStream(new FilteringOptions("two.txt"));

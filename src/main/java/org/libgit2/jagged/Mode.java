@@ -10,7 +10,10 @@ public enum Mode
     FILE(0100644),
 
     /** A file with the executable bit set */
-    EXECUTABLE_FILE(0100755);
+    EXECUTABLE_FILE(0100755),
+
+    /** A symlink */
+    LINK(0120000);
 
     private final int value;
 
